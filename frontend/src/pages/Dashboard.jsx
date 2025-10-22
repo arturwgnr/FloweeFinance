@@ -10,6 +10,8 @@ export default function Dashboard() {
   const { user, logout } = useContext(AuthContext);
   const [transactions, setTransactions] = useState([]);
 
+  const [editingId, setEditingId] = useState(null);
+
   const [newTransaction, setNewTransaction] = useState({
     title: "",
     amount: "",
@@ -19,6 +21,41 @@ export default function Dashboard() {
 
   function handleChange(e) {
     setNewTransaction({ ...newTransaction, [e.target.name]: e.target.value });
+  }
+
+  async function fetchTransactions() {
+    try {
+      const res = await api.get("/transactions");
+      setTransactions(res.data.transaction || []);
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  function handleEditTransaction(transaction) {
+    setEditingId(transaction.id);
+
+    setNewTransaction({
+      title: transaction.title,
+      amount: transaction.amount,
+      type: transaction.type,
+      category: transaction.category,
+    });
+  }
+
+  async function handleDeleteTransaction(id) {
+    const confirmDelete = confirm(
+      "Are you sure you want to delete this transaction?"
+    );
+
+    if (!confirmDelete) return;
+    try {
+      await api.delete(`transactions/${id}`);
+      setTransactions((prev) => prev.filter((t) => t.id !== id));
+    } catch (error) {
+      console.error(error);
+      alert("Error deleting transaction");
+    }
   }
 
   async function handleAddTransaction(e) {
@@ -33,15 +70,6 @@ export default function Dashboard() {
     } catch (error) {
       console.error(error);
       alert("Error adding transaction");
-    }
-  }
-
-  async function fetchTransactions() {
-    try {
-      const res = await api.get("/transactions");
-      setTransactions(res.data.transaction || []);
-    } catch (error) {
-      console.error(error);
     }
   }
 
@@ -157,6 +185,15 @@ export default function Dashboard() {
                   </div>
                   <div className="amount">
                     {t.type === "income" ? "+" : "-"}€{t.amount}
+                  </div>
+
+                  <div className="buttons">
+                    <button onClick={() => handleEditTransaction(t)}>
+                      Edit
+                    </button>
+                    <button onClick={() => handleDeleteTransaction(t.id)}>
+                      X
+                    </button>
                   </div>
                 </li>
               ))}
