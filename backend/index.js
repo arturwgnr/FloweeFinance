@@ -5,6 +5,11 @@ import { authenticate } from "./middleware/authenticate.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 
+import dotenv from "dotenv";
+dotenv.config();
+
+console.log("JWT SECRET:", process.env.JWT_SECRET);
+
 const prisma = new PrismaClient();
 
 const app = express();
@@ -106,8 +111,6 @@ app.get("/transactions", authenticate, async (req, res) => {
     if (transaction.length === 0) {
       res.status(401).json({ message: "💸 No transactions yet..." });
     }
-
-    res.status(200).json({ message: "💰 Transaction list:", transaction });
   } catch (error) {
     res.status(401).json({ error: error });
   }
@@ -116,6 +119,8 @@ app.get("/transactions", authenticate, async (req, res) => {
 //POST
 app.post("/transactions", authenticate, async (req, res) => {
   try {
+    console.log("BODY RECEIVED:", req.body);
+    console.log("USER AUTH:", req.user);
     const { title, amount, type, category } = req.body;
 
     const userId = req.user.id;
@@ -123,7 +128,7 @@ app.post("/transactions", authenticate, async (req, res) => {
     const transaction = await prisma.transaction.create({
       data: {
         title,
-        amount,
+        amount: parseFloat(amount),
         type,
         category,
         userId,

@@ -5,10 +5,36 @@ import { useNavigate } from "react-router";
 import "../styles/dashboard.css";
 
 export default function Dashboard() {
+  const nav = useNavigate();
+
   const { user, logout } = useContext(AuthContext);
   const [transactions, setTransactions] = useState([]);
 
-  const nav = useNavigate();
+  const [newTransaction, setNewTransaction] = useState({
+    title: "",
+    amount: "",
+    type: "",
+    category: "",
+  });
+
+  function handleChange(e) {
+    setNewTransaction({ ...newTransaction, [e.target.name]: e.target.value });
+  }
+
+  async function handleAddTransaction(e) {
+    e.preventDefault();
+
+    try {
+      const res = await api.post("/transactions", newTransaction);
+      const created = res.data.transaction;
+
+      setTransactions((prev) => [...prev, created]); // atualiza instantaneamente
+      setNewTransaction({ title: "", amount: "", type: "", category: "" }); // limpa form
+    } catch (error) {
+      console.error(error);
+      alert("Error adding transaction");
+    }
+  }
 
   async function fetchTransactions() {
     try {
@@ -20,8 +46,9 @@ export default function Dashboard() {
   }
 
   useEffect(() => {
+    if (!user) return; // só busca se o usuário existir e estiver logado
     fetchTransactions();
-  }, []);
+  }, [user]);
 
   return (
     <div className="dashboard">
@@ -64,17 +91,71 @@ export default function Dashboard() {
           </div>
         </section>
 
+        <section className="add-transaction glass">
+          <h4>Add Transaction</h4>
+          <form onSubmit={handleAddTransaction}>
+            {/* Type */}
+            <select
+              name="type"
+              value={newTransaction.type}
+              onChange={handleChange}
+            >
+              <option value="">Select type</option>
+              <option value="income">Income</option>
+              <option value="expense">Expense</option>
+            </select>
+
+            {/* Title */}
+            <input
+              type="text"
+              name="title"
+              placeholder="Title"
+              value={newTransaction.title}
+              onChange={handleChange}
+            />
+
+            {/* Category */}
+            <select
+              name="category"
+              value={newTransaction.category}
+              onChange={handleChange}
+            >
+              <option value="">Select category</option>
+              <option value="Food">Food</option>
+              <option value="Transport">Transport</option>
+              <option value="Housing">Housing</option>
+              <option value="Shopping">Shopping</option>
+              <option value="Salary">Salary</option>
+              <option value="Other">Other</option>
+            </select>
+
+            {/* Amount */}
+            <input
+              type="number"
+              name="amount"
+              placeholder="Amount"
+              value={newTransaction.amount}
+              onChange={handleChange}
+            />
+            <button type="submit">Add</button>
+          </form>
+        </section>
+        <br />
+
         {/* Transactions */}
         <section className="transactions glass">
           <h4>Your Transactions</h4>
           {transactions.length === 0 ? (
             <p className="no-transactions">No transactions yet.</p>
           ) : (
-            <ul>
+            <ul className="transaction-list">
               {transactions.map((t) => (
-                <li key={t.id}>
-                  <div className="t-title">{t.title}</div>
-                  <div className={`t-amount ${t.type}`}>
+                <li key={t.id} className={`transaction-item ${t.type}`}>
+                  <div className="transaction-info">
+                    <h4>{t.title}</h4>
+                    <span className="category">{t.category}</span>
+                  </div>
+                  <div className="amount">
                     {t.type === "income" ? "+" : "-"}€{t.amount}
                   </div>
                 </li>

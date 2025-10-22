@@ -46,7 +46,7 @@ export default function Landing() {
       </main>
 
       <footer className="footer">
-        <p>© 2025 Flowee — Smart finance, simple design.</p>
+        <p>© 2026 Flowee — Powered by Artur Wagner</p>
       </footer>
     </div>
   );
