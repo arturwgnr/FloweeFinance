@@ -4,12 +4,23 @@ import api from "../services/api";
 export const AuthContext = createContext();
 
 export function AuthProvider({ children }) {
-  const [user, setUser] = useState(() => {
-    const savedUser = localStorage.getItem("user");
-    return savedUser ? JSON.parse(savedUser) : null;
-  });
+  const [user, setUser] = useState(null);
+  const [token, setToken] = useState("");
+  const [loading, setLoading] = useState(true);
 
-  const [token, setToken] = useState(() => localStorage.getItem("token") || "");
+  // 🔹 Restaura user e token do localStorage ao iniciar
+  useEffect(() => {
+    const savedUser = localStorage.getItem("user");
+    const savedToken = localStorage.getItem("token");
+
+    if (savedUser && savedToken) {
+      setUser(JSON.parse(savedUser));
+      setToken(savedToken);
+      api.defaults.headers.common["Authorization"] = `Bearer ${savedToken}`;
+    }
+
+    setLoading(false);
+  }, []);
 
   // 🔹 Sincroniza token no localStorage e no Axios
   useEffect(() => {
@@ -21,14 +32,6 @@ export function AuthProvider({ children }) {
       delete api.defaults.headers.common["Authorization"];
     }
   }, [token]);
-
-  // 🔹 Restaura usuário salvo
-  useEffect(() => {
-    const savedUser = localStorage.getItem("user");
-    if (savedUser) {
-      setUser(JSON.parse(savedUser));
-    }
-  }, []);
 
   // 🔹 Atualiza user no localStorage
   useEffect(() => {
@@ -63,6 +66,7 @@ export function AuthProvider({ children }) {
     login,
     logout,
     isAuthenticated: !!token,
+    loading,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

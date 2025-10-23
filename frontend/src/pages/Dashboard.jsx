@@ -1,12 +1,15 @@
 import { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../context/AuthContext";
 import api from "../services/api";
-import { useNavigate } from "react-router";
+import { useNavigate, Navigate } from "react-router";
 import "../styles/dashboard.css";
 
 export default function Dashboard() {
   const nav = useNavigate();
-  const { user, token, logout } = useContext(AuthContext);
+  const { user, token, logout, loading, isAuthenticated } =
+    useContext(AuthContext);
+
+  console.log(token);
 
   const [transactions, setTransactions] = useState([]);
   const [editingId, setEditingId] = useState(null);
@@ -24,17 +27,17 @@ export default function Dashboard() {
   async function fetchTransactions() {
     try {
       const res = await api.get("/transactions");
-      setTransactions(res.data.transaction || []);
+      setTransactions(res.data.transactions || []);
     } catch (error) {
-      console.error(error);
+      console.error("Error fetching transactions:", error);
     }
   }
 
   useEffect(() => {
-    if (token) {
+    if (!loading && isAuthenticated) {
       fetchTransactions();
     }
-  }, [token]);
+  }, [loading, isAuthenticated]);
 
   function startEditing(transaction) {
     setEditingId(transaction.id);
@@ -94,6 +97,9 @@ export default function Dashboard() {
       alert("Error adding transaction");
     }
   }
+
+  if (loading) return <p>Loading...</p>;
+  if (!isAuthenticated) return <Navigate to="/login" />;
 
   return (
     <div className="dashboard">
