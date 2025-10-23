@@ -435,3 +435,44 @@
     max-height: 50vh;
   }
 }
+
+/*BUTTONS*/
+/* === Buttons inside transaction items === */
+.transaction-item .buttons {
+  display: flex;
+  gap: 0.6rem;
+}
+
+.transaction-item .buttons button {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: var(--color-text-secondary);
+  font-size: 0.85rem;
+  font-weight: 500;
+  padding: 0.35rem 0.8rem;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: 0.25s ease;
+  backdrop-filter: blur(6px);
+}
+
+/* Edit button */
+.transaction-item .buttons button:first-child {
+  color: var(--color-primary);
+  border-color: rgba(88, 166, 255, 0.25);
+}
+.transaction-item .buttons button:first-child:hover {
+  background: rgba(88, 166, 255, 0.26);
+  box-shadow: 0 0 20px rgba(88, 166, 255, 0.2);
+}
+
+/* Delete (X) button */
+.transaction-item .buttons button:last-child {
+  background-color: #be2d2d;
+  color: #f1f1f1;
+  border-color: rgba(255, 99, 99, 0.2);
+}
+.transaction-item .buttons button:last-child:hover {
+  background-color: #da4040;
+  box-shadow: 0 0 20px rgba(238, 68, 68, 0.479);
+}
