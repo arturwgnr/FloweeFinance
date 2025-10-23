@@ -32,29 +32,50 @@ export default function Dashboard() {
     }
   }
 
-  function handleEditTransaction(transaction) {
+  function startEditing(transaction) {
     setEditingId(transaction.id);
-
     setNewTransaction({
       title: transaction.title,
-      amount: transaction.amount,
+      amount: String(transaction.amount),
       type: transaction.type,
       category: transaction.category,
     });
   }
-
   async function handleDeleteTransaction(id) {
     const confirmDelete = confirm(
       "Are you sure you want to delete this transaction?"
     );
 
     if (!confirmDelete) return;
+
     try {
       await api.delete(`transactions/${id}`);
       setTransactions((prev) => prev.filter((t) => t.id !== id));
     } catch (error) {
       console.error(error);
+
       alert("Error deleting transaction");
+    }
+  }
+
+  async function handleEditTransaction(e) {
+    e.preventDefault();
+
+    try {
+      const res = await api.put(`/transactions/${editingId}`, newTransaction);
+      const updated = res.data.transaction;
+
+      // atualiza o estado local
+      setTransactions((prev) =>
+        prev.map((t) => (t.id === editingId ? updated : t))
+      );
+
+      // limpa o form e sai do modo edição
+      setNewTransaction({ title: "", amount: "", type: "", category: "" });
+      setEditingId(null);
+    } catch (error) {
+      console.error(error);
+      alert("Error editing transaction");
     }
   }
 
@@ -74,9 +95,10 @@ export default function Dashboard() {
   }
 
   useEffect(() => {
-    if (!user) return; // só busca se o usuário existir e estiver logado
+    const token = localStorage.getItem("token");
+    if (!token) return;
     fetchTransactions();
-  }, [user]);
+  }, []);
 
   return (
     <div className="dashboard">
@@ -121,7 +143,9 @@ export default function Dashboard() {
 
         <section className="add-transaction glass">
           <h4>Add Transaction</h4>
-          <form onSubmit={handleAddTransaction}>
+          <form
+            onSubmit={editingId ? handleEditTransaction : handleAddTransaction}
+          >
             {/* Type */}
             <select
               name="type"
@@ -165,7 +189,7 @@ export default function Dashboard() {
               value={newTransaction.amount}
               onChange={handleChange}
             />
-            <button type="submit">Add</button>
+            <button type="submit">{editingId ? "Save Changes" : "Add"}</button>
           </form>
         </section>
         <br />
@@ -188,9 +212,7 @@ export default function Dashboard() {
                   </div>
 
                   <div className="buttons">
-                    <button onClick={() => handleEditTransaction(t)}>
-                      Edit
-                    </button>
+                    <button onClick={() => startEditing(t)}>Edit</button>
                     <button onClick={() => handleDeleteTransaction(t.id)}>
                       X
                     </button>

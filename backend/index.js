@@ -103,16 +103,19 @@ app.post("/login", async (req, res) => {
 //GET
 app.get("/transactions", authenticate, async (req, res) => {
   try {
+    console.log("USER FROM TOKEN:", req.user); // 👈 adiciona aqui
+
     const userId = req.user.id;
-    const transaction = await prisma.transaction.findMany({
+    const transactions = await prisma.transaction.findMany({
       where: { userId },
     });
 
-    if (transaction.length === 0) {
-      res.status(401).json({ message: "💸 No transactions yet..." });
-    }
+    res.status(200).json({
+      message: "💰 Transaction list",
+      transactions,
+    });
   } catch (error) {
-    res.status(401).json({ error: error });
+    res.status(500).json({ error });
   }
 });
 
