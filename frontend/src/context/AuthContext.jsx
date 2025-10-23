@@ -11,7 +11,7 @@ export function AuthProvider({ children }) {
 
   const [token, setToken] = useState(() => localStorage.getItem("token") || "");
 
-  // Sincroniza token no localStorage e no axios
+  // 🔹 Sincroniza token no localStorage e no Axios
   useEffect(() => {
     if (token) {
       localStorage.setItem("token", token);
@@ -22,6 +22,7 @@ export function AuthProvider({ children }) {
     }
   }, [token]);
 
+  // 🔹 Restaura usuário salvo
   useEffect(() => {
     const savedUser = localStorage.getItem("user");
     if (savedUser) {
@@ -29,7 +30,7 @@ export function AuthProvider({ children }) {
     }
   }, []);
 
-  // Sincroniza usuário
+  // 🔹 Atualiza user no localStorage
   useEffect(() => {
     if (user) {
       localStorage.setItem("user", JSON.stringify(user));
@@ -38,16 +39,22 @@ export function AuthProvider({ children }) {
     }
   }, [user]);
 
+  // 🔹 Login
   function login(userData, userToken) {
     setUser(userData);
     setToken(userToken);
-    localStorage.setItem("user", JSON.stringify(userData)); // 👈 aqui
+    localStorage.setItem("user", JSON.stringify(userData));
+    localStorage.setItem("token", userToken);
+    api.defaults.headers.common["Authorization"] = `Bearer ${userToken}`;
   }
 
+  // 🔹 Logout
   function logout() {
     setUser(null);
     setToken("");
     localStorage.removeItem("user");
+    localStorage.removeItem("token");
+    delete api.defaults.headers.common["Authorization"];
   }
 
   const value = {

@@ -6,12 +6,10 @@ import "../styles/dashboard.css";
 
 export default function Dashboard() {
   const nav = useNavigate();
+  const { user, token, logout } = useContext(AuthContext);
 
-  const { user, logout } = useContext(AuthContext);
   const [transactions, setTransactions] = useState([]);
-
   const [editingId, setEditingId] = useState(null);
-
   const [newTransaction, setNewTransaction] = useState({
     title: "",
     amount: "",
@@ -32,6 +30,12 @@ export default function Dashboard() {
     }
   }
 
+  useEffect(() => {
+    if (token) {
+      fetchTransactions();
+    }
+  }, [token]);
+
   function startEditing(transaction) {
     setEditingId(transaction.id);
     setNewTransaction({
@@ -41,19 +45,18 @@ export default function Dashboard() {
       category: transaction.category,
     });
   }
+
   async function handleDeleteTransaction(id) {
     const confirmDelete = confirm(
       "Are you sure you want to delete this transaction?"
     );
-
     if (!confirmDelete) return;
 
     try {
-      await api.delete(`transactions/${id}`);
+      await api.delete(`/transactions/${id}`);
       setTransactions((prev) => prev.filter((t) => t.id !== id));
     } catch (error) {
       console.error(error);
-
       alert("Error deleting transaction");
     }
   }
@@ -65,12 +68,10 @@ export default function Dashboard() {
       const res = await api.put(`/transactions/${editingId}`, newTransaction);
       const updated = res.data.transaction;
 
-      // atualiza o estado local
       setTransactions((prev) =>
         prev.map((t) => (t.id === editingId ? updated : t))
       );
 
-      // limpa o form e sai do modo edição
       setNewTransaction({ title: "", amount: "", type: "", category: "" });
       setEditingId(null);
     } catch (error) {
@@ -86,23 +87,16 @@ export default function Dashboard() {
       const res = await api.post("/transactions", newTransaction);
       const created = res.data.transaction;
 
-      setTransactions((prev) => [...prev, created]); // atualiza instantaneamente
-      setNewTransaction({ title: "", amount: "", type: "", category: "" }); // limpa form
+      setTransactions((prev) => [...prev, created]);
+      setNewTransaction({ title: "", amount: "", type: "", category: "" });
     } catch (error) {
       console.error(error);
       alert("Error adding transaction");
     }
   }
 
-  useEffect(() => {
-    const token = localStorage.getItem("token");
-    if (!token) return;
-    fetchTransactions();
-  }, []);
-
   return (
     <div className="dashboard">
-      {/* Top Bar */}
       <nav className="topbar glass">
         <h2 className="logo">Flowee ᨒ</h2>
         <div className="user-area">
@@ -119,13 +113,11 @@ export default function Dashboard() {
         </div>
       </nav>
 
-      {/* Content */}
       <main className="main-content">
         <h3 className="welcome">
           Welcome back, {user ? user.username : "User"} 👋
         </h3>
 
-        {/* Summary Cards */}
         <section className="summary">
           <div className="summary-card glass">
             <h4>Total Balance</h4>
@@ -146,7 +138,6 @@ export default function Dashboard() {
           <form
             onSubmit={editingId ? handleEditTransaction : handleAddTransaction}
           >
-            {/* Type */}
             <select
               name="type"
               value={newTransaction.type}
@@ -157,7 +148,6 @@ export default function Dashboard() {
               <option value="expense">Expense</option>
             </select>
 
-            {/* Title */}
             <input
               type="text"
               name="title"
@@ -166,7 +156,6 @@ export default function Dashboard() {
               onChange={handleChange}
             />
 
-            {/* Category */}
             <select
               name="category"
               value={newTransaction.category}
@@ -181,7 +170,6 @@ export default function Dashboard() {
               <option value="Other">Other</option>
             </select>
 
-            {/* Amount */}
             <input
               type="number"
               name="amount"
@@ -194,7 +182,6 @@ export default function Dashboard() {
         </section>
         <br />
 
-        {/* Transactions */}
         <section className="transactions glass">
           <h4>Your Transactions</h4>
           {transactions.length === 0 ? (
