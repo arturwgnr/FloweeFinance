@@ -12,41 +12,24 @@
 }
 
 /* Fundo animado */
-.dashboard::before {
-  content: "";
-  position: absolute;
-  top: -20%;
-  left: -20%;
-  width: 140%;
-  height: 140%;
+.dashboard {
   background: radial-gradient(
-      circle at 25% 30%,
-      rgba(88, 166, 255, 0.15),
-      transparent 60%
+      circle at 20% 30%,
+      rgba(109, 170, 240, 0.158),
+      transparent 70%
     ),
     radial-gradient(
-      circle at 70% 70%,
-      rgba(139, 92, 246, 0.12),
-      transparent 60%
-    );
-  filter: blur(100px);
-  animation: dashboardFlow 15s ease-in-out infinite alternate;
-  z-index: 0;
-}
-
-@keyframes dashboardFlow {
-  0% {
-    transform: translate(0, 0);
-    opacity: 0.75;
-  }
-  50% {
-    transform: translate(2%, 2%);
-    opacity: 0.9;
-  }
-  100% {
-    transform: translate(-2%, -2%);
-    opacity: 0.75;
-  }
+      circle at 80% 70%,
+      rgba(97, 55, 194, 0.096),
+      transparent 70%
+    ),
+    var(--color-bg);
+  background-attachment: fixed;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  overflow-x: hidden;
+  position: relative;
 }
 
 .dashboard::before {
@@ -66,7 +49,7 @@
   align-items: center;
   padding: 1.2rem 3rem;
   background: rgba(255, 255, 255, 0.02);
-  backdrop-filter: blur(10px);
+  backdrop-filter: blur(16px);
   width: 100%;
   box-sizing: border-box;
   position: sticky;
@@ -167,7 +150,18 @@
 }
 
 .summary-card p.red {
-  color: var(--color-error);
+  color: #ee3e4d;
+}
+
+.add-transaction select {
+  background-color: #282d3ce6;
+  color: #f1f1f1;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.add-transaction select option {
+  background-color: #1e2335; /* fundo das opções */
+  color: #f1f1f1; /* cor do texto */
 }
 
 /* === Transactions === */
@@ -188,6 +182,7 @@
   list-style: none;
   display: flex;
   flex-direction: column;
+  justify-content: space-between;
   gap: 0.8rem;
   max-height: 60vh;
   overflow-y: auto;
@@ -463,7 +458,7 @@
 }
 .transaction-item .buttons button:first-child:hover {
   background: rgba(88, 166, 255, 0.26);
-  box-shadow: 0 0 20px rgba(88, 166, 255, 0.2);
+  box-shadow: 0 0 20px rgba(88, 166, 255, 0.342);
 }
 
 /* Delete (X) button */

@@ -3,6 +3,7 @@ import { AuthContext } from "../context/AuthContext";
 import api from "../services/api";
 import { useNavigate, Navigate } from "react-router";
 import "../styles/dashboard.css";
+import toast, { Toaster } from "react-hot-toast";
 
 export default function Dashboard() {
   const nav = useNavigate();
@@ -19,6 +20,19 @@ export default function Dashboard() {
     type: "",
     category: "",
   });
+  const [isLoading, setIsLoading] = useState(false);
+
+  const totalIncome = transactions
+    .filter((t) => t.type === "income")
+    .reduce((sum, t) => sum + Number(t.amount), 0);
+
+  const totalExpense = transactions
+    .filter((t) => t.type === "expense")
+    .reduce((sum, t) => sum + Number(t.amount), 0);
+
+  const balance = totalIncome - totalExpense;
+
+  console.log(balance);
 
   function handleChange(e) {
     setNewTransaction({ ...newTransaction, [e.target.name]: e.target.value });
@@ -50,41 +64,107 @@ export default function Dashboard() {
   }
 
   async function handleDeleteTransaction(id) {
-    const confirmDelete = confirm(
-      "Are you sure you want to delete this transaction?"
+    toast(
+      (t) => (
+        <div style={{ color: "#282d3ce6" }}>
+          <p>Delete this transaction?</p>
+          <div
+            style={{
+              display: "flex",
+              gap: "8px",
+              marginTop: "8px",
+              justifyContent: "center", // centraliza horizontalmente
+              alignItems: "center",
+            }}
+          >
+            <button
+              onClick={async () => {
+                toast.dismiss(t.id);
+                try {
+                  await api.delete(`/transactions/${id}`);
+                  setTransactions((prev) => prev.filter((tr) => tr.id !== id));
+                  toast.success("Transaction deleted!");
+                } catch (error) {
+                  console.error(error);
+                  toast.error("Error deleting transaction!");
+                }
+              }}
+              style={{
+                background: "#ef4444",
+                color: "#fff",
+                border: "none",
+                padding: "4px 10px",
+                borderRadius: "6px",
+                cursor: "pointer",
+              }}
+            >
+              Yes
+            </button>
+            <button
+              onClick={() => toast.dismiss(t.id)}
+              style={{
+                background: "#374151",
+                color: "#fff",
+                border: "none",
+                padding: "4px 10px",
+                borderRadius: "6px",
+                cursor: "pointer",
+              }}
+            >
+              No
+            </button>
+          </div>
+        </div>
+      ),
+      { duration: 4000 }
     );
-    if (!confirmDelete) return;
-
-    try {
-      await api.delete(`/transactions/${id}`);
-      setTransactions((prev) => prev.filter((t) => t.id !== id));
-    } catch (error) {
-      console.error(error);
-      alert("Error deleting transaction");
-    }
   }
 
   async function handleEditTransaction(e) {
     e.preventDefault();
 
+    if (
+      !newTransaction.title ||
+      !newTransaction.amount ||
+      !newTransaction.type
+    ) {
+      toast.error("Please fill all fields before submiting!");
+      return;
+    }
+    setIsLoading(true);
+
     try {
       const res = await api.put(`/transactions/${editingId}`, newTransaction);
-      const updated = res.data.transaction;
+      const updated = res.data.updated;
 
       setTransactions((prev) =>
         prev.map((t) => (t.id === editingId ? updated : t))
       );
 
       setNewTransaction({ title: "", amount: "", type: "", category: "" });
+      toast.success("Transaction edited successfully!");
       setEditingId(null);
     } catch (error) {
       console.error(error);
-      alert("Error editing transaction");
+      toast.error("Error editing transaction! Try again later");
+    } finally {
+      setIsLoading(false);
     }
   }
 
   async function handleAddTransaction(e) {
     e.preventDefault();
+
+    if (
+      !newTransaction.title ||
+      !newTransaction.amount ||
+      !newTransaction.type
+    ) {
+      toast.error("Please fill all fields!");
+      return;
+    }
+
+    setIsLoading(true);
 
     try {
       const res = await api.post("/transactions", newTransaction);
@@ -92,9 +172,12 @@ export default function Dashboard() {
 
       setTransactions((prev) => [...prev, created]);
       setNewTransaction({ title: "", amount: "", type: "", category: "" });
+      toast.success("Transaction added successfully!");
     } catch (error) {
       console.error(error);
-      alert("Error adding transaction");
+      toast.error("Error adding transaction!");
+    } finally {
+      setIsLoading(false);
     }
   }
 
@@ -104,13 +187,14 @@ export default function Dashboard() {
   return (
     <div className="dashboard">
       <nav className="topbar glass">
+        <Toaster position="top-center" reverseOrder={false} />
         <h2 className="logo">Flowee ᨒ</h2>
         <div className="user-area">
           <span className="username">{user ? user.username : "User"}</span>
           <button
             onClick={() => {
               logout();
-              nav("/");
+              setTimeout(() => nav("/"), 150);
             }}
             className="btn-logout"
           >
@@ -127,15 +211,15 @@ export default function Dashboard() {
         <section className="summary">
           <div className="summary-card glass">
             <h4>Total Balance</h4>
-            <p>€4,872.23</p>
+            <p>€{balance.toFixed()}</p>
           </div>
           <div className="summary-card glass">
             <h4>Income</h4>
-            <p className="green">+€1,420</p>
+            <p className="green">€{totalIncome}</p>
           </div>
           <div className="summary-card glass">
             <h4>Expenses</h4>
-            <p className="red">-€780</p>
+            <p className="red">€-{totalExpense}</p>
           </div>
         </section>
 
