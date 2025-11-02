@@ -1,0 +1,438 @@
+:root {
+  /* ===== TOKENS DE COR E DESIGN SYSTEM ===== */
+  --color-primary: #58c173;
+  --color-accent: #58c173;
+  --color-bg: #1e291c; /* fundo base escuro com leve tom verde */
+  --color-surface: #1c2822; /* cards, header e elementos elevados */
+  --color-text-primary: #e8f5ec;
+  --color-text-secondary: #aebfb3;
+  --color-border: #2b3a32;
+
+  /* ===== TOKENS DE ESPAÇAMENTO E RAIO ===== */
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 20px;
+  --spacing-xs: 0.5rem;
+  --spacing-sm: 1rem;
+  --spacing-md: 1.5rem;
+  --spacing-lg: 3rem;
+}
+
+/* ===== RESET E BASE GLOBAL ===== */
+html,
+body {
+  height: 100%;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  overflow-y: auto;
+  background-color: var(--color-bg);
+  color: var(--color-text-primary);
+  font-family: "Poppins", sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+#root {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+/* ===== BASE ===== */
+.landing {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background: radial-gradient(circle at top right, #16211c, var(--color-bg));
+  color: var(--color-text-primary);
+}
+
+/* ===== HEADER ===== */
+.landing-header {
+  height: 80px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.5rem 3rem;
+  background-color: var(--color-surface);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.logo {
+  font-size: 1.9rem;
+  font-weight: 700;
+  color: var(--color-accent);
+  letter-spacing: 1px;
+}
+
+/* ===== NAVIGATION ===== */
+.nav-btn {
+  margin-left: 1rem;
+  padding: 0.6rem 1.3rem;
+  border-radius: 8px;
+  font-weight: 600;
+  text-decoration: none;
+  color: white;
+  background-color: #338f4a;
+  transition: 0.4s ease;
+}
+
+.nav-btn-register {
+  margin-left: 1rem;
+  padding: 0.6rem 1.3rem;
+  border-radius: 8px;
+  font-weight: 500;
+  text-decoration: none;
+  color: white;
+  border: 1px solid #58c17233;
+  background-color: transparent;
+  transition: 0.4s ease;
+}
+
+.nav-btn-register:hover {
+  border: 1px solid #58c172;
+  background-color: #273830;
+  box-shadow: 1px 1px 35px #73e4912a;
+  transform: translateY(-1px);
+}
+
+.nav-btn:hover {
+  background-color: #42b15e;
+  outline: #86f0a3;
+  box-shadow: 1px 1px 30px #73e4911f;
+  transform: translateY(-1px);
+}
+
+.nav-btn.outlined {
+  background: transparent;
+  color: var(--color-accent);
+  border: 2px solid var(--color-accent);
+}
+
+.nav-btn.outlined:hover {
+  background-color: var(--color-accent);
+  color: var(--color-bg);
+}
+
+/* ===== MAIN ===== */
+.landing-main {
+  flex: 1;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: center;
+  gap: 2.5rem;
+  padding: 4rem 8%;
+}
+
+.intro {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.headline {
+  font-size: 3rem;
+  font-weight: 700;
+  line-height: 1.2;
+  color: var(--color-text-primary);
+  max-width: 500px;
+}
+
+.subtext {
+  font-size: 1.1rem;
+  line-height: 1.7;
+  color: var(--color-text-secondary);
+  max-width: 480px;
+}
+
+.cta-btn {
+  margin-top: 1rem;
+  padding: 0.9rem 2.2rem;
+  font-weight: 600;
+  color: white;
+  background-color: #338f4a;
+  border-radius: 10px;
+  text-decoration: none;
+  width: fit-content;
+  transition: 0.4s ease;
+}
+
+.cta-btn:hover {
+  background-color: #42b15e;
+  outline: #86f0a3;
+  box-shadow: 1px 1px 30px #73e49123;
+  transform: translateY(-1px);
+}
+
+/* ===== MOCKUP ===== */
+.mockup {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.mockup-card {
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 20px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  padding: 2rem;
+  width: 90%;
+  max-width: 400px;
+  text-align: center;
+  transition: 0.5s ease;
+}
+
+.mockup-card:hover {
+  transform: scale(1.02);
+  box-shadow: 1px 1px 50px #518b6e04;
+}
+
+.mockup-title {
+  font-size: 1.2rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  color: var(--color-text-primary);
+}
+
+.mockup-placeholder {
+  width: 100%;
+  height: 220px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #1f2c25, #2e3d33);
+  box-shadow: inset 0 0 12px rgba(0, 0, 0, 0.4);
+}
+
+/* ===== FOOTER ===== */
+.landing-footer {
+  text-align: center;
+  padding: 1rem;
+  font-size: 0.9rem;
+  color: var(--color-text-secondary);
+  background-color: var(--color-surface);
+  border-top: 1px solid var(--color-border);
+}
+
+/* ===== MOCKUP UPGRADED ===== */
+.mockup-card {
+  background: linear-gradient(160deg, #1a261f, #1f2e26);
+  border: 1px solid #2f3e36;
+  border-radius: 20px;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
+  padding: 2rem;
+  width: 90%;
+  max-width: 400px;
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+/* Top Section */
+.mockup-header {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.mockup-balance-label {
+  font-size: 0.9rem;
+  color: #aebfb3;
+  letter-spacing: 0.5px;
+}
+
+.mockup-balance {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: #58c173;
+}
+
+/* Bars (Income / Expense simulation) */
+.mockup-bars {
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+}
+
+.bar {
+  height: 14px;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.75rem;
+  color: #e8f5ec;
+  font-weight: 500;
+  opacity: 0.9;
+  position: relative;
+}
+
+.bar-income {
+  width: 90%;
+  background: linear-gradient(90deg, #58c173, #75d68b);
+  box-shadow: 0 0 12px #58c17333;
+}
+
+.bar-expense {
+  width: 60%;
+  background: linear-gradient(90deg, #e96d64, #ff8a80);
+  box-shadow: 0 0 12px #e96d6433;
+}
+
+/* Transaction list (bottom) */
+.mockup-list {
+  margin-top: 0.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.transaction {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: rgba(255, 255, 255, 0.04);
+  padding: 0.6rem 0.9rem;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  transition: 0.4s ease;
+}
+
+.transaction:hover {
+  background-color: #35473e;
+  transform: scale(1.06);
+}
+
+.transaction p {
+  color: #e8f5ec;
+  font-weight: 500;
+}
+
+.transaction:nth-child(2) p {
+  color: #58c173;
+}
+
+/* ===== BARS (Income / Expense simulation) ===== */
+.mockup-bars {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem; /* mais espaço entre as barras */
+}
+
+.bar {
+  height: 22px; /* AQUI: aumentada a altura (antes 14px) */
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  color: #f1fff7;
+  opacity: 0.95;
+  position: relative;
+  transition: 0.3s ease;
+}
+
+.bar-income {
+  width: 90%;
+  background: linear-gradient(90deg, #58c173, #75d68b);
+  box-shadow: 0 0 15px #58c17333;
+}
+
+.bar-expense {
+  width: 60%;
+  background: linear-gradient(90deg, #e96d64, #ff8a80);
+  box-shadow: 0 0 15px #e96d6433;
+}
+
+/* Texto dentro da barra */
+.span-bar-title {
+  font-size: 1.05rem; /* proporcional à nova altura */
+  font-weight: 600;
+  letter-spacing: 0.4px;
+  text-shadow: 0 0 6px rgba(0, 0, 0, 0.6);
+}
+
+.transaction:nth-child(1) p,
+.transaction:nth-child(3) p {
+  color: #e96d64;
+}
+
+/*fundo*/
+
+/* ===== BACKGROUND ANIMATION (FIXED + SCROLL ENABLED) ===== */
+
+/* container principal */
+.landing {
+  position: relative;
+  overflow: visible; /* 👈 permite o scroll */
+  min-height: 100%; /* garante crescimento natural */
+}
+
+/* camada 1 — gradiente em movimento */
+.landing::before {
+  content: "";
+  position: fixed; /* 👈 mantém o fundo fixo enquanto rola */
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(circle at 20% 30%, #1f2e26 0%, transparent 60%),
+    radial-gradient(circle at 80% 70%, #203428 0%, transparent 60%);
+  animation: floweeGradient 14s ease-in-out infinite alternate;
+  z-index: -2;
+  opacity: 0.45;
+}
+
+/* camada 2 — textura sutil de ruído */
+.landing::after {
+  content: "";
+  position: fixed; /* 👈 também fixa a textura */
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: url("https://www.transparenttextures.com/patterns/asfalt-dark.png");
+  background-size: 300px;
+  opacity: 0.08;
+  mix-blend-mode: overlay;
+  z-index: -1;
+}
+
+/* mantém o conteúdo acima das camadas */
+.landing > * {
+  position: relative;
+  z-index: 1;
+}
+
+/* animação suave do gradiente */
+@keyframes floweeGradient {
+  0% {
+    background-position: 20% 30%, 80% 70%;
+  }
+  100% {
+    background-position: 80% 40%, 30% 60%;
+  }
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 900px) {
+  .landing-main {
+    grid-template-columns: 1fr;
+    text-align: center;
+    gap: 3rem;
+  }
+
+  .intro {
+    align-items: center;
+  }
+
+  .mockup-card {
+    width: 100%;
+    max-width: 340px;
+  }
+}
