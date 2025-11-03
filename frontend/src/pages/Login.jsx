@@ -1,20 +1,53 @@
 import { Link } from "react-router-dom";
+import { loginUser } from "../services/api";
+import { useState } from "react";
+import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 import "../styles/Login.css";
 
 export default function Login() {
+  const [formData, setFormData] = useState({
+    email: "",
+    password: "",
+  });
+
+  async function handleSubmit(e) {
+    e.preventDefault();
+
+    if (formData.email === "" || formData.password === "") {
+      return toast.warning("Please check information!");
+    }
+
+    try {
+      const res = await loginUser(formData);
+      console.log(res.data);
+    } catch (error) {
+      console.error(error);
+      toast.error("Login error, try again later");
+    }
+  }
+
+  const nav = useNavigate();
+
   return (
     <div className="login-page">
       <header className="login-header">
-        <h1 className="logo">ᨒ Flowee</h1>
+        <h1 onClick={() => nav("/")} className="logo">
+          ᨒ Flowee
+        </h1>
       </header>
 
       <main className="login-container">
-        <form className="login-form">
+        <form onSubmit={handleSubmit} className="login-form">
           <h2 className="login-title">Welcome back</h2>
           <p className="login-subtitle">Log in to continue your journey</p>
 
           <label>Email</label>
           <input
+            value={formData.email}
+            onChange={(e) =>
+              setFormData({ ...formData, [e.target.name]: e.target.value })
+            }
             type="email"
             name="email"
             placeholder="example@email.com"
@@ -23,6 +56,10 @@ export default function Login() {
 
           <label>Password</label>
           <input
+            value={formData.password}
+            onChange={(e) =>
+              setFormData({ ...formData, [e.target.name]: e.target.value })
+            }
             type="password"
             name="password"
             placeholder="••••••••"

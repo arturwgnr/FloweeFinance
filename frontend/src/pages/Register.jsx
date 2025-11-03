@@ -1,5 +1,8 @@
 import { Link } from "react-router-dom";
 import { useState } from "react";
+import { registerUser } from "../services/api";
+import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 import "../styles/Register.css";
 
 export default function Register() {
@@ -11,20 +14,41 @@ export default function Register() {
 
   const [repeatedPassword, setRepeatedPassword] = useState("");
 
-  function passwordCheck() {
-    if (repeatedPassword !== formData.password) {
-      alert("Passwords must match!");
+  const nav = useNavigate();
+
+  async function handleSubmit(e) {
+    e.preventDefault();
+
+    if (formData.password !== repeatedPassword) {
+      return toast.warning("Passwords must match!");
+    }
+
+    if (formData.password.length <= 5) {
+      return toast.warning("Password is too short");
+    }
+    try {
+      const res = await registerUser(formData);
+      console.log(res.data);
+
+      toast.success("User created successfully");
+
+      nav("/login");
+    } catch (error) {
+      console.error(error);
+      return toast.error("Error creating user");
     }
   }
 
   return (
     <div className="register-page">
       <header className="register-header">
-        <h1 className="logo">ᨒ Flowee</h1>
+        <h1 onClick={() => nav("/")} className="logo">
+          ᨒ Flowee
+        </h1>
       </header>
 
       <main className="register-container">
-        <form className="register-form">
+        <form onSubmit={handleSubmit} className="register-form">
           <h2 className="register-title">Create your account</h2>
           <p className="register-subtitle">
             Join Flowee and start organizing your finances today.
