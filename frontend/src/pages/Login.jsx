@@ -6,6 +6,8 @@ import { useNavigate } from "react-router-dom";
 import "../styles/Login.css";
 
 export default function Login() {
+  const nav = useNavigate();
+
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -21,13 +23,14 @@ export default function Login() {
     try {
       const res = await loginUser(formData);
       console.log(res.data);
+
+      toast.success("Login successfull!");
+      nav("/dashboard");
     } catch (error) {
       console.error(error);
-      toast.error("Login error, try again later");
+      toast.error("Error during to login!");
     }
   }
-
-  const nav = useNavigate();
 
   return (
     <div className="login-page">
@@ -39,8 +42,10 @@ export default function Login() {
 
       <main className="login-container">
         <form onSubmit={handleSubmit} className="login-form">
-          <h2 className="login-title">Welcome back</h2>
-          <p className="login-subtitle">Log in to continue your journey</p>
+          <div className="title">
+            <h2 className="login-title">Welcome back</h2>
+            <p className="login-subtitle">Log in to continue your journey</p>
+          </div>
 
           <label>Email</label>
           <input

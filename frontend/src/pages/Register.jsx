@@ -24,18 +24,18 @@ export default function Register() {
     }
 
     if (formData.password.length <= 5) {
-      return toast.warning("Password is too short");
+      return toast.warning("Password is too short.");
     }
     try {
       const res = await registerUser(formData);
       console.log(res.data);
 
-      toast.success("User created successfully");
+      toast.success("User created successfully!");
 
       nav("/login");
     } catch (error) {
       console.error(error);
-      return toast.error("Error creating user");
+      return toast.error("Error creating user!");
     }
   }
 
@@ -49,10 +49,12 @@ export default function Register() {
 
       <main className="register-container">
         <form onSubmit={handleSubmit} className="register-form">
-          <h2 className="register-title">Create your account</h2>
-          <p className="register-subtitle">
-            Join Flowee and start organizing your finances today.
-          </p>
+          <div className="title">
+            <h2 className="register-title">Create your account</h2>
+            <p className="register-subtitle">
+              Join Flowee and start organizing your finances today.
+            </p>
+          </div>
 
           <label>Name</label>
           <input
