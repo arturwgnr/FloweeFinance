@@ -104,7 +104,7 @@ FloweeFinance/
 ----------------------------------------------------
 👨‍💻 DEVELOPER
 ----------------------------------------------------
-Artur Wagner Nascimento Silva
+Artur Wagner
 Based in Ireland
 Frontend Developer in training, focused on building real, functional projects that demonstrate technical ability, discipline, and design awareness.
 
