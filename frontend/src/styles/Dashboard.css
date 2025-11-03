@@ -1,0 +1,264 @@
+/* ===== BASE ===== */
+.dashboard {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: linear-gradient(180deg, #f9fbf8 0%, #edf1eb 100%);
+  color: #1b1f1b;
+  position: relative;
+  overflow-x: hidden;
+}
+
+/* ===== TEXTURE ===== */
+.dashboard::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background-image: url("https://www.transparenttextures.com/patterns/dust.png");
+  background-size: 300px;
+  opacity: 0.04;
+  z-index: -1;
+}
+
+.title {
+  color: #3ca463 !important;
+}
+
+.filter-div {
+  display: flex;
+}
+
+.subtitle {
+  color: #3ca463;
+  margin-right: 10px;
+  font-weight: 600;
+}
+
+/* ===== TOPBAR ===== */
+.topbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.6rem 3rem;
+  background-color: #4cbf72f6;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.24);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.logo {
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: white;
+  cursor: pointer;
+}
+
+.nav-actions {
+  display: flex;
+  gap: 1rem;
+}
+
+.btn-add,
+.btn-logout {
+  padding: 0.6rem 1.2rem;
+  border-radius: 10px;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  transition: 0.25s ease;
+}
+
+.btn-add {
+  background-color: white;
+  color: #667466;
+  transition: 0.4s ease;
+}
+
+.btn-add:hover {
+  color: #3ca463;
+  background-color: rgb(255, 255, 255);
+  box-shadow: 1px 1px 30px rgba(0, 0, 0, 0.151);
+}
+
+.btn-logout {
+  background-color: white;
+  color: #667466;
+  transition: 0.4s ease;
+}
+
+.btn-logout:hover {
+  background-color: #ff3030c9;
+  color: white;
+}
+
+/* ===== MAIN ===== */
+.dashboard-main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 2.5rem;
+  padding: 3rem 8%;
+}
+
+/* ===== SUMMARY ===== */
+.summary {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+  gap: 1.5rem;
+}
+
+.card {
+  background-color: #ffffff;
+  border: 1px solid #e3e7e1;
+  border-radius: 14px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
+  padding: 1.8rem;
+  text-align: center;
+  transition: 0.3s ease;
+}
+
+.card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+}
+
+.card h3 {
+  font-size: 1rem;
+  color: #667466;
+  margin-bottom: 0.3rem;
+}
+
+.amount {
+  font-size: 1.8rem;
+  font-weight: 700;
+}
+
+.income-card .amount {
+  color: #4cbf72;
+}
+
+.expense-card .amount {
+  color: #e45b5b;
+}
+
+.balance-card .amount {
+  color: #202620;
+}
+
+/* ===== TRANSACTIONS ===== */
+.transactions {
+  background-color: #ffffff;
+  border: 1px solid #e3e7e1;
+  border-radius: 14px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
+  padding: 2rem;
+}
+
+.transactions-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.transactions-header h2 {
+  font-size: 1.3rem;
+  font-weight: 600;
+  color: #1b1f1b;
+}
+
+.filter {
+  background-color: #ffffff;
+  border: 1px solid #e3e7e1;
+  color: #1b1f1b;
+  border-radius: 10px;
+  padding: 0.4rem 0.8rem;
+}
+
+.transactions-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.transaction-item {
+  display: flex;
+  justify-content: space-between;
+  background-color: #ffffff;
+  border: 1px solid #e3e7e1;
+  padding: 0.8rem 1rem;
+  border-radius: 10px;
+  font-weight: 500;
+  transition: 0.3s ease;
+}
+
+.transaction-item:hover {
+  background-color: #f3f6f2;
+}
+
+.type.income {
+  color: #4cbf72;
+}
+
+.type.expense {
+  color: #e45b5b;
+}
+
+/* ===== ANALYTICS ===== */
+.analytics {
+  background-color: #ffffff;
+  border: 1px solid #e3e7e1;
+  border-radius: 14px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
+  padding: 2rem;
+  text-align: center;
+}
+
+.analytics h2 {
+  margin-bottom: 1rem;
+  font-weight: 600;
+  color: #1b1f1b;
+}
+
+.chart-placeholder {
+  height: 250px;
+  border: 1px dashed #d8ddd8;
+  border-radius: 10px;
+  color: #667466;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+}
+
+/* ===== FOOTER ===== */
+.dashboard-footer {
+  text-align: center;
+  padding: 1rem;
+  font-size: 0.85rem;
+  color: #667466;
+  background-color: #ffffff;
+  border-top: 1px solid #e3e7e1;
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 768px) {
+  .dashboard-main {
+    padding: 2rem 1.5rem;
+  }
+
+  .topbar {
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .summary {
+    grid-template-columns: 1fr;
+  }
+
+  .transactions,
+  .analytics {
+    padding: 1.5rem;
+  }
+}

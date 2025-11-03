@@ -24,11 +24,12 @@ export default function Login() {
       const res = await loginUser(formData);
       console.log(res.data);
 
-      toast.success("Login successfull!");
+      localStorage.setItem("userId", res.data.existingUser.id);
+      toast.success("Login successfull");
       nav("/dashboard");
     } catch (error) {
       console.error(error);
-      toast.error("Error during to login!");
+      toast.error("Error during to login");
     }
   }
 
