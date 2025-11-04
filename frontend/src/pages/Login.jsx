@@ -29,7 +29,7 @@ export default function Login() {
       nav("/dashboard");
     } catch (error) {
       console.error(error);
-      toast.error("Error during to login");
+      toast.error("Error during login");
     }
   }
 

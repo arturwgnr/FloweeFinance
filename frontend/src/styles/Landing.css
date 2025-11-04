@@ -249,6 +249,7 @@ body {
 
 /* Bars (Income / Expense simulation) */
 .mockup-bars {
+  margin-bottom: 20px;
   display: flex;
   flex-direction: column;
   gap: 0.7rem;
