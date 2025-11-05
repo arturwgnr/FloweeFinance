@@ -436,6 +436,62 @@
   color: #2da6e2;
 }
 
+/*UX EDITS*/
+.keep-open {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.95rem;
+  color: #4b4b4b;
+  margin-top: 0.5rem;
+  user-select: none;
+  cursor: pointer;
+}
+
+.keep-open input[type="checkbox"] {
+  accent-color: #73e68f;
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+}
+
+.keep-open:hover {
+  color: #2f2f2f;
+}
+
+.confirm-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  backdrop-filter: blur(3px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.confirm-box {
+  background: #ffffff;
+  padding: 2rem;
+  border-radius: 14px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  max-width: 380px;
+  width: 90%;
+}
+
+.confirm-box p {
+  font-size: 1rem;
+  color: #333;
+  margin-bottom: 1.5rem;
+}
+
+.confirm-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+}
+
 /* ===== ANIMATION ===== */
 @keyframes fadeIn {
   from {

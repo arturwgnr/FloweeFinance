@@ -13,7 +13,8 @@ import "../styles/Dashboard.css";
 export default function Dashboard() {
   const [transactions, setTransactions] = useState([]);
   const [filteredTransactions, setFilteredTransactions] = useState([]);
-  const [filterType, setFilterType] = useState("all"); // <- controle do select
+  const [filterType, setFilterType] = useState("all");
+  const [filterCategory, setFilterCategory] = useState("all");
 
   const [formData, setFormData] = useState({
     description: "",
@@ -32,9 +33,19 @@ export default function Dashboard() {
   const username = localStorage.getItem("username");
   const nav = useNavigate();
 
-  //-------------------------------------------------------------
+  //Categories
+  const incomeCategories = ["Salary", "Bonus", "Investiment", "Other"];
+  const expenseCategories = ["Food", "Bills", "Shopping", "House", "Other"];
 
-  //Totais
+  //Transaction form
+  const [keepOpen, setKeepOpen] = useState(false);
+
+  //Delete confirmation
+  const [deleteId, setDeleteId] = useState(null);
+
+  //-------------------------------------------------------
+
+  //Totals
   const incomeTotal = transactions
     .filter((t) => t.type === "income")
     .reduce((acc, t) => acc + t.amount, 0)
@@ -49,7 +60,7 @@ export default function Dashboard() {
     2
   );
 
-  // Carregar dados
+  //Load data
   useEffect(() => {
     const userId = localStorage.getItem("userId");
     async function fetchData() {
@@ -67,7 +78,7 @@ export default function Dashboard() {
     fetchData();
   }, []);
 
-  // Atualiza filtro toda vez que o tipo muda
+  //General Filter
   useEffect(() => {
     if (filterType === "all") {
       setFilteredTransactions(transactions);
@@ -77,6 +88,21 @@ export default function Dashboard() {
       );
     }
   }, [filterType, transactions]);
+
+  //Category filter
+  useEffect(() => {
+    let filtered = [...transactions];
+
+    if (filterType !== "all") {
+      filtered = filtered.filter((t) => t.type === filterType);
+    }
+
+    if (filterCategory !== "all") {
+      filtered = filtered.filter((t) => t.category === filterCategory);
+    }
+
+    setFilteredTransactions(filtered);
+  }, [filterType, filterCategory, transactions]);
 
   function handleOpenForm() {
     setFormData({ description: "", amount: "", category: "", type: "" });
@@ -119,7 +145,9 @@ export default function Dashboard() {
       }
 
       setFormData({ description: "", amount: "", category: "", type: "" });
-      setIsModalOpened(false);
+      if (!keepOpen) {
+        setIsModalOpened(false);
+      }
       setIsEditing(false);
       setEditingId(null);
     } catch (error) {
@@ -133,6 +161,7 @@ export default function Dashboard() {
       await deleteTransaction(id);
       const updated = transactions.filter((t) => t.id !== id);
       setTransactions(updated);
+      toast.success("Transaction deleted successfully!");
     } catch (error) {
       console.error(error);
       toast.error("Error deleting task");
@@ -201,15 +230,21 @@ export default function Dashboard() {
                 <option value="income">Income</option>
                 <option value="expense">Expenses</option>
               </select>
+
               <p className="subtitle">Category:</p>
               <select
-                value={filterType}
-                onChange={(e) => setFilterType(e.target.value)}
+                value={filterCategory}
+                onChange={(e) => setFilterCategory(e.target.value)}
                 className="filter"
               >
-                <option value="all">All</option>
-                <option value="income">Income</option>
-                <option value="expense">Expenses</option>
+                <option value="all">All Categories</option>
+                {Array.from(new Set(transactions.map((t) => t.category))).map(
+                  (c) => (
+                    <option key={c} value={c}>
+                      {c}
+                    </option>
+                  )
+                )}
               </select>
             </div>
           </div>
@@ -236,7 +271,7 @@ export default function Dashboard() {
                     </button>
                     <button
                       className="icon-btn-delete"
-                      onClick={() => handleDelete(t.id)}
+                      onClick={() => setDeleteId(t.id)}
                     >
                       <FiTrash2 />
                     </button>
@@ -245,6 +280,31 @@ export default function Dashboard() {
               ))
             )}
           </ul>
+
+          {deleteId && (
+            <div className="confirm-overlay" onClick={() => setDeleteId(null)}>
+              <div className="confirm-box" onClick={(e) => e.stopPropagation()}>
+                <p>Are you sure you want to delete this transaction?</p>
+                <div className="confirm-buttons">
+                  <button
+                    className="btn-confirm"
+                    onClick={async () => {
+                      await handleDelete(deleteId);
+                      setDeleteId(null);
+                    }}
+                  >
+                    Yes, delete
+                  </button>
+                  <button
+                    className="btn-cancel"
+                    onClick={() => setDeleteId(null)}
+                  >
+                    Cancel
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
         </section>
 
         <section className="analytics">
@@ -253,6 +313,7 @@ export default function Dashboard() {
         </section>
       </main>
 
+      {/* Transaction form */}
       {isModalOpened && (
         <div className="modal-overlay" onClick={() => setIsModalOpened(false)}>
           <div
@@ -295,15 +356,23 @@ export default function Dashboard() {
                 <option value="income">Income</option>
                 <option value="expense">Expense</option>
               </select>
-              <input
+              <select
                 value={formData.category}
-                name="category"
                 onChange={(e) =>
                   setFormData({ ...formData, [e.target.name]: e.target.value })
                 }
-                type="text"
-                placeholder="Category"
-              />
+                name="category"
+              >
+                <option value="">Select Category</option>
+                {(formData.type === "income"
+                  ? incomeCategories
+                  : expenseCategories
+                ).map((c) => (
+                  <option key={c} value={c}>
+                    {c}
+                  </option>
+                ))}
+              </select>
 
               <div className="modal-buttons">
                 <button type="submit" className="btn-confirm">
@@ -317,6 +386,14 @@ export default function Dashboard() {
                   Cancel
                 </button>
               </div>
+              <label className="keep-open">
+                <input
+                  type="checkbox"
+                  checked={keepOpen}
+                  onChange={() => setKeepOpen(!keepOpen)}
+                />
+                Keep this window open
+              </label>
             </form>
           </div>
         </div>
