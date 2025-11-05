@@ -127,7 +127,7 @@ app.put("/transactions/:id", async (req, res) => {
 });
 
 //Delete
-app.delete("/transactions/:userId", async (req, res) => {
+app.delete("/transactions/:id", async (req, res) => {
   try {
     const { id } = req.params;
     const deleted = await prisma.transaction.delete({

@@ -1,12 +1,20 @@
 import { useState, useEffect } from "react";
-import { getTransactions } from "../services/api";
-import { createTransaction } from "../services/api";
+import { FiEdit2, FiTrash2 } from "react-icons/fi";
+import {
+  getTransactions,
+  createTransaction,
+  deleteTransaction,
+  updateTransaction,
+} from "../services/api";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import "../styles/Dashboard.css";
 
 export default function Dashboard() {
   const [transactions, setTransactions] = useState([]);
+  const [filteredTransactions, setFilteredTransactions] = useState([]);
+  const [filterType, setFilterType] = useState("all"); // <- controle do select
+
   const [formData, setFormData] = useState({
     description: "",
     amount: "",
@@ -14,10 +22,19 @@ export default function Dashboard() {
     type: "",
   });
 
-  const [isModalOpened, setIsModalOpened] = useState(false);
+  //UX Edits
+  const [isLoading, setIsLoading] = useState(false);
 
+  const [isModalOpened, setIsModalOpened] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
+  const [editingId, setEditingId] = useState(null);
+
+  const username = localStorage.getItem("username");
   const nav = useNavigate();
 
+  //-------------------------------------------------------------
+
+  //Totais
   const incomeTotal = transactions
     .filter((t) => t.type === "income")
     .reduce((acc, t) => acc + t.amount, 0)
@@ -32,49 +49,98 @@ export default function Dashboard() {
     2
   );
 
+  // Carregar dados
   useEffect(() => {
     const userId = localStorage.getItem("userId");
-
     async function fetchData() {
+      setIsLoading(true);
       try {
         const res = await getTransactions(userId);
-
         setTransactions(res.data.transactions);
+        setFilteredTransactions(res.data.transactions);
       } catch (error) {
         console.error(error);
+      } finally {
+        setIsLoading(false);
       }
     }
-
     fetchData();
   }, []);
 
-  function handleOpenForm() {
-    setIsModalOpened(!isModalOpened);
+  // Atualiza filtro toda vez que o tipo muda
+  useEffect(() => {
+    if (filterType === "all") {
+      setFilteredTransactions(transactions);
+    } else {
+      setFilteredTransactions(
+        transactions.filter((t) => t.type === filterType)
+      );
+    }
+  }, [filterType, transactions]);
 
-    console.log(isModalOpened);
+  function handleOpenForm() {
+    setFormData({ description: "", amount: "", category: "", type: "" });
+    setIsEditing(false);
+    setEditingId(null);
+    setIsModalOpened(true);
+  }
+
+  function handleIsEditing(id) {
+    const selected = transactions.find((t) => t.id === id);
+    setFormData({
+      description: selected.description,
+      amount: selected.amount,
+      category: selected.category,
+      type: selected.type,
+    });
+    setIsEditing(true);
+    setEditingId(id);
+    setIsModalOpened(true);
   }
 
   async function handleSubmitTransaction(e) {
     e.preventDefault();
+    const userId = localStorage.getItem("userId");
 
     try {
-      const userId = localStorage.getItem("userId");
-      const res = await createTransaction(userId, formData);
+      let res;
 
-      setTransactions([...transactions, res.data.newTransaction]);
+      if (isEditing) {
+        res = await updateTransaction(editingId, formData);
+        const updatedList = transactions.map((t) =>
+          t.id === editingId ? res.data.updatedTransaction : t
+        );
+        setTransactions(updatedList);
+        toast.success("Transaction updated successfully!");
+      } else {
+        res = await createTransaction(userId, formData);
+        setTransactions([...transactions, res.data.newTransaction]);
+        toast.success("Transaction added successfully!");
+      }
 
       setFormData({ description: "", amount: "", category: "", type: "" });
       setIsModalOpened(false);
-      toast.success("Transaction added successfully");
+      setIsEditing(false);
+      setEditingId(null);
     } catch (error) {
       console.error(error);
-      toast.error("Error adding transaction");
+      toast.error("Error saving transaction");
+    }
+  }
+
+  async function handleDelete(id) {
+    try {
+      await deleteTransaction(id);
+      const updated = transactions.filter((t) => t.id !== id);
+      setTransactions(updated);
+    } catch (error) {
+      console.error(error);
+      toast.error("Error deleting task");
     }
   }
 
   return (
     <div className="dashboard">
-      {/* ===== TOPBAR ===== */}
       <header className="topbar">
         <h1 className="logo">ᨒ Flowee</h1>
         <nav className="nav-actions">
@@ -85,36 +151,62 @@ export default function Dashboard() {
         </nav>
       </header>
 
-      {/* ===== MAIN CONTENT ===== */}
       <main className="dashboard-main">
-        {/* ===== SUMMARY CARDS ===== */}
+        <h1 className="title">Welcome back, {username}</h1>
+
         <section className="summary">
           <div className="card income-card">
             <h3>Income</h3>
-            <p className="amount">€{incomeTotal}</p>
+            {isLoading ? (
+              <p className="loading">Loading...</p>
+            ) : (
+              <p className="amount">€{incomeTotal}</p>
+            )}
           </div>
           <div className="card expense-card">
             <h3>Expenses</h3>
-            <p className="amount">€{expenseTotal}</p>
+            {isLoading ? (
+              <p className="loading">Loading...</p>
+            ) : (
+              <p className="amount">€{expenseTotal}</p>
+            )}
           </div>
           <div className="card balance-card">
             <h3>Balance</h3>
-            <p className="amount">€{balance}</p>
+            {isLoading ? (
+              <p className="loading">Loading...</p>
+            ) : (
+              <p className="amount">€{balance}</p>
+            )}
           </div>
         </section>
 
-        {/* ===== TRANSACTIONS LIST ===== */}
         <div className="transaction-area">
           <button onClick={handleOpenForm} className="btn-add">
             + Add Transaction
           </button>
         </div>
+
         <section className="transactions">
           <div className="transactions-header">
             <h2 className="title">Recent Transactions</h2>
             <div className="filter-div">
               <p className="subtitle">Filter:</p>
-              <select className="filter">
+              <select
+                value={filterType}
+                onChange={(e) => setFilterType(e.target.value)}
+                className="filter"
+              >
+                <option value="all">All</option>
+                <option value="income">Income</option>
+                <option value="expense">Expenses</option>
+              </select>
+              <p className="subtitle">Category:</p>
+              <select
+                value={filterType}
+                onChange={(e) => setFilterType(e.target.value)}
+                className="filter"
+              >
                 <option value="all">All</option>
                 <option value="income">Income</option>
                 <option value="expense">Expenses</option>
@@ -123,11 +215,11 @@ export default function Dashboard() {
           </div>
 
           <ul className="transactions-list">
-            {transactions.length === 0 ? (
+            {filteredTransactions.length === 0 ? (
               <p>No transactions available yet</p>
             ) : (
-              transactions.map((t) => (
-                <li key={t.id} className="transaction-item">
+              filteredTransactions.map((t) => (
+                <li key={t.id} className={`transaction-item ${t.type}`}>
                   <span className="desc">{t.description}</span>
                   <span className="desc">{t.category}</span>
                   <span
@@ -135,7 +227,19 @@ export default function Dashboard() {
                       t.type === "income" ? "type income" : "type expense"
                     }
                   >
-                    {t.type === "income" ? "+" : "-"} €{t.amount}
+                    {t.type === "income" ? "+" : "-"} €{t.amount}{" "}
+                    <button
+                      className="icon-btn-edit"
+                      onClick={() => handleIsEditing(t.id)}
+                    >
+                      <FiEdit2 />
+                    </button>
+                    <button
+                      className="icon-btn-delete"
+                      onClick={() => handleDelete(t.id)}
+                    >
+                      <FiTrash2 />
+                    </button>
                   </span>
                 </li>
               ))
@@ -143,7 +247,6 @@ export default function Dashboard() {
           </ul>
         </section>
 
-        {/* ===== ANALYTICS (PLACEHOLDER FOR CHART) ===== */}
         <section className="analytics">
           <h2 className="title">Spending Overview</h2>
           <div className="chart-placeholder">📊 Chart area</div>
@@ -152,8 +255,15 @@ export default function Dashboard() {
 
       {isModalOpened && (
         <div className="modal-overlay" onClick={() => setIsModalOpened(false)}>
-          <div className="modal-container" onClick={(e) => e.stopPropagation()}>
-            <h2 className="modal-title">Add Transaction</h2>
+          <div
+            className={
+              isModalOpened ? "modal-container open" : "modal-container"
+            }
+            onClick={(e) => e.stopPropagation()}
+          >
+            <h2 className="modal-title">
+              {isEditing ? "Edit Transaction" : "Add Transaction"}
+            </h2>
 
             <form onSubmit={handleSubmitTransaction} className="modal-form">
               <input
@@ -174,15 +284,6 @@ export default function Dashboard() {
                 type="number"
                 placeholder="Amount (€)"
               />
-              <input
-                value={formData.category}
-                name="category"
-                onChange={(e) =>
-                  setFormData({ ...formData, [e.target.name]: e.target.value })
-                }
-                type="text"
-                placeholder="Category"
-              />
               <select
                 name="type"
                 value={formData.type}
@@ -194,10 +295,19 @@ export default function Dashboard() {
                 <option value="income">Income</option>
                 <option value="expense">Expense</option>
               </select>
+              <input
+                value={formData.category}
+                name="category"
+                onChange={(e) =>
+                  setFormData({ ...formData, [e.target.name]: e.target.value })
+                }
+                type="text"
+                placeholder="Category"
+              />
 
               <div className="modal-buttons">
                 <button type="submit" className="btn-confirm">
-                  Add
+                  {isEditing ? "Update" : "Add"}
                 </button>
                 <button
                   type="button"
@@ -212,7 +322,6 @@ export default function Dashboard() {
         </div>
       )}
 
-      {/* ===== FOOTER ===== */}
       <footer className="dashboard-footer">
         <p>
           © {new Date().getFullYear()} Flowee Finance — Designed by Artur Wagner

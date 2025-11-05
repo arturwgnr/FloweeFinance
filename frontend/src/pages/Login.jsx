@@ -25,6 +25,7 @@ export default function Login() {
       console.log(res.data);
 
       localStorage.setItem("userId", res.data.existingUser.id);
+      localStorage.setItem("username", res.data.existingUser.name);
       toast.success("Login successfull");
       nav("/dashboard");
     } catch (error) {

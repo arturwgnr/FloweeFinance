@@ -30,6 +30,7 @@
 }
 
 .subtitle {
+  margin-left: 10px;
   color: #3ca463;
   margin-right: 10px;
   font-weight: 600;
@@ -41,7 +42,7 @@
   justify-content: space-between;
   align-items: center;
   padding: 0.6rem 3rem;
-  background-color: #4cbf72f6;
+  background-color: #4cbf72;
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.24);
   position: sticky;
   top: 0;
@@ -110,7 +111,7 @@
 }
 
 .btn-logout:hover {
-  background-color: #fa4848e1;
+  background-color: #ee2d2de1;
   color: white;
 }
 
@@ -207,16 +208,63 @@
 .transaction-item {
   display: flex;
   justify-content: space-between;
+  align-items: center;
   background-color: #ffffff;
   border: 1px solid #e3e7e1;
-  padding: 0.8rem 1rem;
-  border-radius: 10px;
+  padding: 0.9rem 1.2rem;
+  border-radius: 12px;
   font-weight: 500;
   transition: 0.3s ease;
+  position: relative;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
 }
 
+/* 🔹 barra lateral colorida */
+.transaction-item::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 6px;
+  border-radius: 12px 0 0 12px;
+}
+
+.transaction-item.income::before {
+  background-color: #4cbf72; /* verde */
+}
+
+.transaction-item.expense::before {
+  background-color: #e45b5b; /* vermelho */
+}
+
+/* 🔹 hover sutil */
 .transaction-item:hover {
-  background-color: #f3f6f2;
+  background-color: #ffffff;
+  transform: scale(1.01);
+  box-shadow: 0px 4px 5px rgba(0, 0, 0, 0.103);
+}
+
+/* 🔹 conteúdo interno mais organizado */
+.transaction-item span {
+  flex: 1;
+  text-align: center;
+}
+
+.transaction-item .desc:first-child {
+  text-align: left;
+  font-weight: 600;
+  color: #2b2b2b;
+}
+
+.transaction-item .desc:nth-child(2) {
+  color: #667466;
+  font-size: 0.95rem;
+}
+
+.transaction-item .type {
+  text-align: right;
+  font-weight: 700;
 }
 
 .type.income {
@@ -280,6 +328,14 @@
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
   text-align: center;
   animation: fadeIn 0.25s ease-in-out;
+
+  transition: all 0.3s ease;
+  transform: scale(0.95);
+  opacity: 0;
+  &.open {
+    transform: scale(1);
+    opacity: 1;
+  }
 }
 
 .modal-title {
@@ -349,6 +405,35 @@
 
 .btn-cancel:hover {
   background-color: #ddd;
+}
+
+.icon-btn-delete {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 1.1rem;
+  color: #aeb9bf;
+  transition: 0.4s ease;
+}
+
+.icon-btn-delete:hover {
+  transform: scale(1.2);
+  color: #f81313;
+}
+
+.icon-btn-edit {
+  margin-left: 10px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 1.1rem;
+  color: #aeb9bf;
+  transition: color 0.2s ease;
+}
+
+.icon-btn-edit:hover {
+  transform: scale(1.2);
+  color: #2da6e2;
 }
 
 /* ===== ANIMATION ===== */
