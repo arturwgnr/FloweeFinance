@@ -38,6 +38,7 @@
 
 /* ===== TOPBAR ===== */
 .topbar {
+  height: 70px !important;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -171,6 +172,7 @@
 
 /* ===== TRANSACTIONS ===== */
 .transactions {
+  margin-top: 0px;
   background-color: #ffffff;
   border: 1px solid #e3e7e1;
   border-radius: 14px;
@@ -203,6 +205,23 @@
   display: flex;
   flex-direction: column;
   gap: 0.6rem;
+}
+
+.nav-arrows {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  margin-bottom: 0px;
+  color: #269c53;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.right-arrow:hover {
+  transform: scale(1.03);
+}
+.left-arrow:hover {
+  transform: scale(1.03);
 }
 
 .transaction-item {

@@ -34,12 +34,12 @@
   inset: 0;
   background: radial-gradient(
       circle at 25% 25%,
-      rgba(42, 88, 53, 0.25) 0%,
+      rgba(39, 146, 64, 0.25) 0%,
       transparent 65%
     ),
     radial-gradient(
       circle at 80% 70%,
-      rgba(53, 163, 125, 0.15) 0%,
+      rgba(22, 87, 64, 0.15) 0%,
       transparent 70%
     ),
     linear-gradient(140deg, #1c291f, #213726, #1a251b);

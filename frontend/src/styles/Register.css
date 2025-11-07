@@ -33,15 +33,15 @@
   inset: 0;
   background: radial-gradient(
       circle at 20% 25%,
-      rgba(88, 193, 115, 0.22) 0%,
+      rgba(69, 207, 104, 0.22) 0%,
       transparent 60%
     ),
     radial-gradient(
       circle at 80% 80%,
-      rgba(100, 255, 200, 0.18) 0%,
+      rgba(31, 160, 115, 0.18) 0%,
       transparent 70%
     ),
-    linear-gradient(150deg, #192318 0%, #1e291c 40%, #273a2b 100%);
+    linear-gradient(150deg, #192318 0%, #1e291c 40%, #2f4e36 100%);
   background-size: 200% 200%;
   animation: floweeGlow 16s ease-in-out infinite alternate;
   opacity: 0.85;

@@ -30,6 +30,10 @@ export default function Dashboard() {
   const [isEditing, setIsEditing] = useState(false);
   const [editingId, setEditingId] = useState(null);
 
+  //Date Filters
+  const [currentMonth, setCurrentMonth] = useState(new Date().getMonth());
+  const [currentYear, setCurrentYear] = useState(new Date().getFullYear());
+
   const username = localStorage.getItem("username");
   const nav = useNavigate();
 
@@ -104,6 +108,10 @@ export default function Dashboard() {
     setFilteredTransactions(filtered);
   }, [filterType, filterCategory, transactions]);
 
+  //-------------------------------------------------------------
+
+  //Functions
+
   function handleOpenForm() {
     setFormData({ description: "", amount: "", category: "", type: "" });
     setIsEditing(false);
@@ -168,6 +176,17 @@ export default function Dashboard() {
     }
   }
 
+  function handleArrowNavRight() {
+    setCurrentMonth((prev) => (prev === 11 ? 0 : prev + 1));
+    if (currentMonth === 11) setCurrentYear((prev) => prev + 1);
+    console.log(currentMonth);
+  }
+  function handleArrowNavLeft() {
+    setCurrentMonth((prev) => (prev === 0 ? 11 : prev - 1));
+    if (currentMonth === 0) setCurrentYear((prev) => prev - 1);
+    console.log(currentMonth);
+  }
+
   return (
     <div className="dashboard">
       <header className="topbar">
@@ -216,6 +235,10 @@ export default function Dashboard() {
           </button>
         </div>
 
+        <div className="nav-arrows">
+          <h1 onClick={handleArrowNavLeft} className="left-arrow">{`<`}</h1>
+          <h1 onClick={handleArrowNavRight} className="right-arrow">{`>`}</h1>
+        </div>
         <section className="transactions">
           <div className="transactions-header">
             <h2 className="title">Recent Transactions</h2>
@@ -250,7 +273,9 @@ export default function Dashboard() {
           </div>
 
           <ul className="transactions-list">
-            {filteredTransactions.length === 0 ? (
+            {isLoading ? (
+              <p>Loading transactions...</p>
+            ) : filteredTransactions.length === 0 ? (
               <p>No transactions available yet</p>
             ) : (
               filteredTransactions.map((t) => (
@@ -262,7 +287,7 @@ export default function Dashboard() {
                       t.type === "income" ? "type income" : "type expense"
                     }
                   >
-                    {t.type === "income" ? "+" : "-"} €{t.amount}{" "}
+                    {t.type === "income" ? "+" : "-"} €{t.amount}
                     <button
                       className="icon-btn-edit"
                       onClick={() => handleIsEditing(t.id)}
