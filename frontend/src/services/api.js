@@ -18,8 +18,10 @@ export async function loginUser(data) {
 }
 
 //Get
-export async function getTransactions(userId) {
-  return await api.get(`/transactions/${userId}`);
+export async function getTransactions(userId, month, year) {
+  return await api.get(`/transactions/${userId}`, {
+    params: { month, year },
+  });
 }
 
 //Create

@@ -16,11 +16,27 @@ export default function Dashboard() {
   const [filterType, setFilterType] = useState("all");
   const [filterCategory, setFilterCategory] = useState("all");
 
+  const monthNames = [
+    "January",
+    "February",
+    "March",
+    "April",
+    "May",
+    "June",
+    "July",
+    "August",
+    "September",
+    "October",
+    "November",
+    "December",
+  ];
+
   const [formData, setFormData] = useState({
     description: "",
     amount: "",
     category: "",
     type: "",
+    date: "",
   });
 
   //UX Edits
@@ -47,6 +63,9 @@ export default function Dashboard() {
   //Delete confirmation
   const [deleteId, setDeleteId] = useState(null);
 
+  //All transactions
+  const [allTransactions, setAllTransactions] = useState([]);
+
   //-------------------------------------------------------
 
   //Totals
@@ -67,10 +86,17 @@ export default function Dashboard() {
   //Load data
   useEffect(() => {
     const userId = localStorage.getItem("userId");
+
+    if (isNaN(currentMonth) || isNaN(currentYear)) return;
+
     async function fetchData() {
       setIsLoading(true);
       try {
-        const res = await getTransactions(userId);
+        const res = await getTransactions(
+          userId,
+          currentMonth + 1,
+          currentYear
+        );
         setTransactions(res.data.transactions);
         setFilteredTransactions(res.data.transactions);
       } catch (error) {
@@ -80,7 +106,7 @@ export default function Dashboard() {
       }
     }
     fetchData();
-  }, []);
+  }, [currentMonth, currentYear]);
 
   //General Filter
   useEffect(() => {
@@ -206,7 +232,7 @@ export default function Dashboard() {
           <div className="card income-card">
             <h3>Income</h3>
             {isLoading ? (
-              <p className="loading">Loading...</p>
+              <p className="user-message">Loading...</p>
             ) : (
               <p className="amount">€{incomeTotal}</p>
             )}
@@ -214,7 +240,7 @@ export default function Dashboard() {
           <div className="card expense-card">
             <h3>Expenses</h3>
             {isLoading ? (
-              <p className="loading">Loading...</p>
+              <p className="user-message">Loading...</p>
             ) : (
               <p className="amount">€{expenseTotal}</p>
             )}
@@ -222,7 +248,7 @@ export default function Dashboard() {
           <div className="card balance-card">
             <h3>Balance</h3>
             {isLoading ? (
-              <p className="loading">Loading...</p>
+              <p className="user-message">Loading...</p>
             ) : (
               <p className="amount">€{balance}</p>
             )}
@@ -235,11 +261,12 @@ export default function Dashboard() {
           </button>
         </div>
 
-        <div className="nav-arrows">
-          <h1 onClick={handleArrowNavLeft} className="left-arrow">{`<`}</h1>
-          <h1 onClick={handleArrowNavRight} className="right-arrow">{`>`}</h1>
-        </div>
         <section className="transactions">
+          <div className="nav-arrows">
+            <h1 onClick={handleArrowNavLeft} className="left-arrow">{`<`}</h1>
+            <h2 className="current-month">{`${monthNames[currentMonth]} ${currentYear}`}</h2>
+            <h1 onClick={handleArrowNavRight} className="right-arrow">{`>`}</h1>
+          </div>
           <div className="transactions-header">
             <h2 className="title">Recent Transactions</h2>
             <div className="filter-div">
@@ -274,14 +301,17 @@ export default function Dashboard() {
 
           <ul className="transactions-list">
             {isLoading ? (
-              <p>Loading transactions...</p>
+              <p className="user-message">Loading transactions...</p>
             ) : filteredTransactions.length === 0 ? (
-              <p>No transactions available yet</p>
+              <p className="user-message">No transactions available...</p>
             ) : (
               filteredTransactions.map((t) => (
                 <li key={t.id} className={`transaction-item ${t.type}`}>
                   <span className="desc">{t.description}</span>
                   <span className="desc">{t.category}</span>
+                  <span className="desc date">
+                    {new Date(t.date).toLocaleDateString()}
+                  </span>
                   <span
                     className={
                       t.type === "income" ? "type income" : "type expense"
@@ -398,6 +428,16 @@ export default function Dashboard() {
                   </option>
                 ))}
               </select>
+
+              <input
+                className="input-date"
+                type="date"
+                name="date"
+                value={formData.date}
+                onChange={(e) =>
+                  setFormData({ ...formData, [e.target.name]: e.target.value })
+                }
+              />
 
               <div className="modal-buttons">
                 <button type="submit" className="btn-confirm">

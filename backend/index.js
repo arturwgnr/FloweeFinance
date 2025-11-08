@@ -20,17 +20,27 @@ app.get("/", (req, res) => {
 app.get("/transactions/:userId", async (req, res) => {
   try {
     const { userId } = req.params;
+    const monthNum = Number(req.query.month);
+    const yearNum = Number(req.query.year);
+
+    console.log("Filtering for:", { monthNum, yearNum });
+
     const transactions = await prisma.transaction.findMany({
-      where: { userId: Number(userId) },
+      where: {
+        userId: Number(userId),
+        date: {
+          gte: new Date(yearNum, monthNum - 1, 1),
+          lt: new Date(yearNum, monthNum, 1),
+        },
+      },
+      orderBy: { date: "desc" },
     });
 
     if (transactions.length === 0) {
-      res
-        .status(400)
-        .json({ message: `No transactions for user [${userId}] available.` });
+      res.status(200).json({ transactions: [] });
     }
 
-    res.status(200).json({ transactions: transactions });
+    res.status(200).json({ transactions });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
@@ -91,7 +101,7 @@ app.post("/login", async (req, res) => {
 app.post("/transactions/:userId", async (req, res) => {
   try {
     const { userId } = req.params;
-    const { description, category, type, amount } = req.body;
+    const { description, category, type, amount, date } = req.body;
 
     const newTransaction = await prisma.transaction.create({
       data: {
@@ -99,6 +109,7 @@ app.post("/transactions/:userId", async (req, res) => {
         category,
         type,
         amount: parseFloat(amount),
+        date: date ? new Date(date) : new Date(),
         userId: Number(userId),
       },
     });

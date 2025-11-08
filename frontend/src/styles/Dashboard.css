@@ -238,6 +238,21 @@
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
 }
 
+.transaction-item .date {
+  font-size: 0.9rem;
+  color: #667466;
+}
+
+.input-date {
+  font-family: arial;
+}
+
+.user-message {
+  font-size: 20px;
+  font-weight: bold;
+  color: #667466;
+}
+
 /* 🔹 barra lateral colorida */
 .transaction-item::before {
   content: "";
