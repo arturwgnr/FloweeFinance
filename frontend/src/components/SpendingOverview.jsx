@@ -41,6 +41,9 @@ export default function SpendingOverview({ filteredTransactions }) {
   // --- Cores fixas ---
   const COLORS = ["#ff6384", "#36a2eb", "#ffcd56", "#4bc0c0", "#9966ff"];
 
+  const hasExpenses = chartDataExpense.length > 0;
+  const hasTransactions = filteredTransactions.length > 0;
+
   return (
     <div
       style={{
@@ -55,23 +58,36 @@ export default function SpendingOverview({ filteredTransactions }) {
         <h3 className="user-message" style={{ textAlign: "center" }}>
           Expenses by Category
         </h3>
-        <PieChart width={300} height={250}>
-          <Pie
-            data={chartDataExpense}
-            dataKey="total"
-            nameKey="category"
-            cx="50%"
-            cy="50%"
-            outerRadius={80}
-            label
+        {hasExpenses ? (
+          <PieChart width={300} height={250}>
+            <Pie
+              data={chartDataExpense}
+              dataKey="total"
+              nameKey="category"
+              cx="50%"
+              cy="50%"
+              outerRadius={80}
+              label
+            >
+              {chartDataExpense.map((_, index) => (
+                <Cell key={index} fill={COLORS[index % COLORS.length]} />
+              ))}
+            </Pie>
+            <Tooltip />
+            <Legend />
+          </PieChart>
+        ) : (
+          <p
+            style={{
+              textAlign: "center",
+              color: "#9aa29a",
+              fontWeight: 700,
+              marginTop: "4rem",
+            }}
           >
-            {chartDataExpense.map((_, index) => (
-              <Cell key={index} fill={COLORS[index % COLORS.length]} />
-            ))}
-          </Pie>
-          <Tooltip />
-          <Legend />
-        </PieChart>
+            No expenses recorded this month 📭
+          </p>
+        )}
       </div>
 
       {/* ----- Bar Chart: Income vs Expense ----- */}

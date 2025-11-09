@@ -33,3 +33,29 @@
   font-weight: bold;
   color: #667466;
 }
+
+/* ===== RESPONSIVE CHARTS ===== */
+@media (max-width: 768px) {
+  .spending-overview {
+    flex-direction: column;
+    align-items: center;
+    gap: 2rem;
+    margin-top: 1rem;
+  }
+
+  .spending-overview > div {
+    width: 100%;
+    max-width: 380px;
+    padding: 1rem;
+  }
+
+  .spending-overview svg {
+    width: 100% !important;
+    height: auto !important;
+  }
+
+  .spending-overview h3 {
+    font-size: 1rem;
+    text-align: center;
+  }
+}

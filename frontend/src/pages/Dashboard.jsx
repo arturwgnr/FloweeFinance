@@ -7,6 +7,8 @@ import {
   updateTransaction,
 } from "../services/api";
 import SpendingOverview from "../components/SpendingOverview";
+import RevenueTrend from "../components/RevenueTrend";
+import AiFinanceChat from "../components/AiFinanceChat";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import "../styles/Dashboard.css";
@@ -64,6 +66,27 @@ export default function Dashboard() {
 
   //Delete confirmation
   const [deleteId, setDeleteId] = useState(null);
+
+  //-------------------------------------------------------
+
+  //Graphics
+  const [currentAnalyticsView, setCurrentAnalyticsView] = useState(0);
+
+  const analyticsViews = [
+    <SpendingOverview filteredTransactions={filteredTransactions} />,
+    <RevenueTrend filteredTransactions={filteredTransactions} />,
+    <AiFinanceChat />,
+  ];
+
+  function handleAnalyticsNav(direction) {
+    setCurrentAnalyticsView((prev) => {
+      if (direction === "left") {
+        return prev === 0 ? analyticsViews.length - 1 : prev - 1;
+      } else {
+        return prev === analyticsViews.length - 1 ? 0 : prev + 1;
+      }
+    });
+  }
 
   //-------------------------------------------------------
 
@@ -290,9 +313,12 @@ export default function Dashboard() {
 
         <section className="transactions">
           <div className="nav-arrows">
-            <h1 onClick={handleArrowNavLeft} className="left-arrow">{`<`}</h1>
+            <h1 onClick={handleArrowNavLeft} className="left-arrow">{`❮`}</h1>
             <h2 className="current-month">{`${monthNames[currentMonth]} ${currentYear}`}</h2>
-            <h1 onClick={handleArrowNavRight} className="right-arrow">{`>`}</h1>
+            <h1
+              onClick={handleArrowNavRight}
+              className="right-arrow"
+            >{`❯ `}</h1>
           </div>
           <div className="transactions-header">
             <h2 className="title">Recent Transactions</h2>
@@ -330,7 +356,7 @@ export default function Dashboard() {
             {isLoading ? (
               <p className="user-message">Loading transactions...</p>
             ) : filteredTransactions.length === 0 ? (
-              <p className="user-message">No transactions available...</p>
+              <p className="user-message">No transactions available.</p>
             ) : (
               filteredTransactions.map((t) => (
                 <li key={t.id} className={`transaction-item ${t.type}`}>
@@ -390,8 +416,31 @@ export default function Dashboard() {
         </section>
 
         <section className="analytics">
-          <h2 className="title">Spending Overview</h2>
-          <SpendingOverview filteredTransactions={filteredTransactions} />
+          <div className="nav-arrows">
+            <h1
+              onClick={() => handleAnalyticsNav("left")}
+              className="left-arrow"
+            >
+              {"❮"}
+            </h1>
+            <h2 className="title">
+              {currentAnalyticsView === 0
+                ? "Spending Overview"
+                : currentAnalyticsView === 1
+                ? "Revenue Trend"
+                : "AI Finance Chat"}
+            </h2>
+            <h1
+              onClick={() => handleAnalyticsNav("right")}
+              className="right-arrow"
+            >
+              {"❯"}
+            </h1>
+          </div>
+
+          <div className="analytics-content">
+            {analyticsViews[currentAnalyticsView]}
+          </div>
         </section>
       </main>
 

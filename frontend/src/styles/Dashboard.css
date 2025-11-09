@@ -526,6 +526,30 @@
   gap: 1rem;
 }
 
+.analytics-content {
+  animation: fadeIn 0.4s ease;
+}
+
+.nav-arrows {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+  color: #3ca463;
+  cursor: pointer;
+}
+
+.nav-arrows h1 {
+  font-size: 1.4rem;
+  user-select: none;
+  transition: 0.2s ease;
+}
+
+.nav-arrows h1:hover {
+  transform: scale(1.22);
+  color: #62ce7d;
+}
+
 /* ===== ANIMATION ===== */
 @keyframes fadeIn {
   from {
@@ -566,5 +590,63 @@
   .transactions,
   .analytics {
     padding: 1.5rem;
+  }
+}
+
+/* ===== MOBILE OPTIMIZATION ===== */
+@media (max-width: 768px) {
+  /* Centraliza e empilha os gráficos */
+  .spending-overview {
+    flex-direction: column;
+    align-items: center;
+    gap: 2rem;
+  }
+
+  /* Redimensiona os gráficos do recharts */
+  .spending-overview svg {
+    max-width: 90vw !important;
+    height: auto !important;
+  }
+
+  /* Melhora o espaçamento interno geral */
+  .analytics {
+    padding: 1.5rem 1rem;
+  }
+
+  /* Reduz espaçamento e tamanho dos títulos */
+  .analytics h2,
+  .transactions-header h2 {
+    font-size: 1.1rem;
+  }
+
+  /* Inputs e selects ocupam largura total */
+  .modal-form input,
+  .modal-form select {
+    width: 100%;
+  }
+
+  /* Evita quebra no topo */
+  .topbar {
+    flex-direction: column;
+    align-items: center;
+    padding: 1rem;
+    height: auto !important;
+  }
+
+  .nav-actions {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  /* Transações mais compactas */
+  .transaction-item {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.4rem;
+  }
+
+  .transaction-item span {
+    text-align: left;
+    width: 100%;
   }
 }
