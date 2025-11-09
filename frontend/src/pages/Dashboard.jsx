@@ -74,7 +74,7 @@ export default function Dashboard() {
 
   const analyticsViews = [
     <SpendingOverview filteredTransactions={filteredTransactions} />,
-    <RevenueTrend filteredTransactions={filteredTransactions} />,
+    <RevenueTrend allTransactions={allTransactions} />,
     <AiFinanceChat />,
   ];
 

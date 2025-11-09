@@ -1,0 +1,6 @@
+/* Responsivo */
+@media (max-width: 768px) {
+  .revenue-trend {
+    padding: 1rem;
+  }
+}
