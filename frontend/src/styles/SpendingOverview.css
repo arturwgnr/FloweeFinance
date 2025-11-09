@@ -1,0 +1,35 @@
+/* ===== SPENDING OVERVIEW (Charts area) ===== */
+.spending-overview {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 3rem;
+  flex-wrap: wrap;
+  margin-top: 1.5rem;
+}
+
+.spending-overview > div {
+  background-color: #fafcf9;
+  border: 1px solid #e3e7e1;
+  border-radius: 12px;
+  padding: 1.5rem 1rem;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.05);
+  transition: 0.3s ease;
+}
+
+.spending-overview > div:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.08);
+}
+
+.spending-overview h3 {
+  font-weight: 600;
+  margin-bottom: 0.8rem;
+  color: #2c2c2c;
+}
+
+.user-message {
+  font-size: 20px;
+  font-weight: bold;
+  color: #667466;
+}

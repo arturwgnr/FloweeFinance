@@ -6,12 +6,14 @@ import {
   deleteTransaction,
   updateTransaction,
 } from "../services/api";
+import SpendingOverview from "../components/SpendingOverview";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import "../styles/Dashboard.css";
 
 export default function Dashboard() {
   const [transactions, setTransactions] = useState([]);
+  const [allTransactions, setAllTransactions] = useState([]);
   const [filteredTransactions, setFilteredTransactions] = useState([]);
   const [filterType, setFilterType] = useState("all");
   const [filterCategory, setFilterCategory] = useState("all");
@@ -63,9 +65,6 @@ export default function Dashboard() {
   //Delete confirmation
   const [deleteId, setDeleteId] = useState(null);
 
-  //All transactions
-  const [allTransactions, setAllTransactions] = useState([]);
-
   //-------------------------------------------------------
 
   //Totals
@@ -79,9 +78,13 @@ export default function Dashboard() {
     .reduce((acc, t) => acc + t.amount, 0)
     .toFixed(2);
 
-  const balance = (parseFloat(incomeTotal) - parseFloat(expenseTotal)).toFixed(
-    2
-  );
+  const balance = allTransactions
+    .reduce((acc, t) => {
+      if (t.type === "income") return acc + t.amount;
+      if (t.type === "expense") return acc - t.amount;
+      return acc;
+    }, 0)
+    .toFixed(2);
 
   //Load data
   useEffect(() => {
@@ -107,6 +110,24 @@ export default function Dashboard() {
     }
     fetchData();
   }, [currentMonth, currentYear]);
+
+  //Load all transactions
+  useEffect(() => {
+    const userId = localStorage.getItem("userId");
+
+    async function fetchAllTransactions() {
+      setIsLoading(true);
+      try {
+        const res = await getTransactions(userId);
+
+        setAllTransactions(res.data.transactions);
+        setIsLoading(false);
+      } catch (error) {
+        console.error(error);
+      }
+    }
+    fetchAllTransactions();
+  }, []);
 
   //General Filter
   useEffect(() => {
@@ -175,8 +196,13 @@ export default function Dashboard() {
       } else {
         res = await createTransaction(userId, formData);
         setTransactions([...transactions, res.data.newTransaction]);
+        setAllTransactions([...allTransactions, res.data.newTransaction]);
         toast.success("Transaction added successfully!");
       }
+
+      // Recarrega todas as transações para atualizar o balance global
+      const allRes = await getTransactions(userId);
+      setAllTransactions(allRes.data.transactions);
 
       setFormData({ description: "", amount: "", category: "", type: "" });
       if (!keepOpen) {
@@ -195,6 +221,7 @@ export default function Dashboard() {
       await deleteTransaction(id);
       const updated = transactions.filter((t) => t.id !== id);
       setTransactions(updated);
+      setAllTransactions(allTransactions.filter((t) => t.id !== id));
       toast.success("Transaction deleted successfully!");
     } catch (error) {
       console.error(error);
@@ -364,7 +391,7 @@ export default function Dashboard() {
 
         <section className="analytics">
           <h2 className="title">Spending Overview</h2>
-          <div className="chart-placeholder">📊 Chart area</div>
+          <SpendingOverview filteredTransactions={filteredTransactions} />
         </section>
       </main>
 

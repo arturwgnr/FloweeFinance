@@ -25,20 +25,21 @@ app.get("/transactions/:userId", async (req, res) => {
 
     console.log("Filtering for:", { monthNum, yearNum });
 
+    // Define condição base (sempre filtra por userId)
+    let whereCondition = { userId: Number(userId) };
+
+    // Se o mês e o ano forem válidos, adiciona filtro de data
+    if (!isNaN(monthNum) && !isNaN(yearNum)) {
+      whereCondition.date = {
+        gte: new Date(yearNum, monthNum - 1, 1),
+        lt: new Date(yearNum, monthNum, 1),
+      };
+    }
+
     const transactions = await prisma.transaction.findMany({
-      where: {
-        userId: Number(userId),
-        date: {
-          gte: new Date(yearNum, monthNum - 1, 1),
-          lt: new Date(yearNum, monthNum, 1),
-        },
-      },
+      where: whereCondition,
       orderBy: { date: "desc" },
     });
-
-    if (transactions.length === 0) {
-      res.status(200).json({ transactions: [] });
-    }
 
     res.status(200).json({ transactions });
   } catch (error) {
@@ -124,15 +125,27 @@ app.post("/transactions/:userId", async (req, res) => {
 app.put("/transactions/:id", async (req, res) => {
   try {
     const { id } = req.params;
+    const { description, category, type, amount, date } = req.body;
+
     const updated = await prisma.transaction.update({
       where: { id: Number(id) },
-      data: req.body,
+      data: {
+        description,
+        category,
+        type,
+        amount: parseFloat(amount),
+        date: date ? new Date(date) : undefined, // garante formato válido
+      },
     });
 
     res
       .status(200)
-      .json({ message: "Transaction updated successfully", updated });
+      .json({
+        message: "Transaction updated successfully",
+        updatedTransaction: updated,
+      });
   } catch (error) {
+    console.error(error);
     res.status(500).json({ error: error.message });
   }
 });
