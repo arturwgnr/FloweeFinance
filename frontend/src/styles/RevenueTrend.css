@@ -4,3 +4,9 @@
     padding: 1rem;
   }
 }
+
+.user-message {
+  font-size: 20px;
+  font-weight: bold;
+  color: #667466;
+}

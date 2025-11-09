@@ -34,7 +34,7 @@ export default function RevenueTrend({ allTransactions }) {
   }));
 
   if (!allTransactions || allTransactions.length === 0)
-    return <p>Loading...</p>;
+    return <p className="user-message">No data available.</p>;
 
   const aggregated = allTransactions.reduce((acc, t) => {
     const monthIndex = new Date(t.date).getMonth();
@@ -46,7 +46,6 @@ export default function RevenueTrend({ allTransactions }) {
 
   const chartData = aggregated.filter((m) => m.income > 0 || m.expense > 0);
 
-  console.log(chartData);
   console.table(aggregated);
 
   return (
