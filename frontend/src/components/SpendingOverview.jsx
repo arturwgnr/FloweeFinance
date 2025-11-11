@@ -21,9 +21,20 @@ export default function SpendingOverview({ filteredTransactions }) {
       return acc;
     }, {});
 
-  const chartDataExpense = Object.entries(expenseByCategory).map(
-    ([category, total]) => ({ category, total })
-  );
+  const CATEGORY_COLORS = {
+    Food: "#a17944ff",
+    Bills: "#ffcd56",
+    House: "#36b48eff",
+    Other: "#80578dff",
+    Salary: "#58c173",
+    Shopping: "#6950fcff",
+    Bonus: "#9966ff",
+    Investiment: "#2d7dd2",
+  };
+
+  const chartDataExpense = Object.entries(expenseByCategory)
+    .map(([category, total]) => ({ category, total }))
+    .sort((a, b) => a.total - b.total);
 
   // --- Totais gerais (para o gráfico de barras) ---
   const incomeTotal = filteredTransactions
@@ -69,8 +80,11 @@ export default function SpendingOverview({ filteredTransactions }) {
               outerRadius={80}
               label
             >
-              {chartDataExpense.map((_, index) => (
-                <Cell key={index} fill={COLORS[index % COLORS.length]} />
+              {chartDataExpense.map((entry, index) => (
+                <Cell
+                  key={index}
+                  fill={CATEGORY_COLORS[entry.category] || "#ccc"}
+                />
               ))}
             </Pie>
             <Tooltip />
