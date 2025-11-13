@@ -53,7 +53,7 @@ export default function SpendingOverview({ filteredTransactions }) {
   const COLORS = ["#ff6384", "#36a2eb", "#ffcd56", "#4bc0c0", "#9966ff"];
 
   const hasExpenses = chartDataExpense.length > 0;
-  const hasTransactions = filteredTransactions.length > 0;
+  // const hasTransactions = filteredTransactions.length > 0;
 
   return (
     <div

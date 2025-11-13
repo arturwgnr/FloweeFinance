@@ -86,7 +86,7 @@
 }
 
 .btn-add-config:hover {
-  box-shadow: 1px 1px 30px rgba(102, 255, 161, 0.534);
+  transform: scale(1.03);
 }
 
 .btn-add {
@@ -548,6 +548,33 @@
 .nav-arrows h1:hover {
   transform: scale(1.22);
   color: #62ce7d;
+}
+
+/*Menu*/
+.menu-container {
+  position: absolute;
+  right: 20px;
+  top: 60px;
+  background: white;
+  width: 500px;
+  height: 300px;
+  border-radius: 10px;
+  display: flex;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+}
+
+.menu-left {
+  width: 150px;
+  background: #f3f3f3;
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.menu-right {
+  flex: 1;
+  padding: 1rem;
 }
 
 /* ===== ANIMATION ===== */

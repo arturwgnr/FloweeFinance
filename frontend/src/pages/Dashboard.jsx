@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { FiEdit2, FiTrash2 } from "react-icons/fi";
+import { FiEdit2, FiTrash2, FiSettings } from "react-icons/fi";
 import {
   getTransactions,
   createTransaction,
@@ -9,6 +9,7 @@ import {
 import SpendingOverview from "../components/SpendingOverview";
 import RevenueTrend from "../components/RevenueTrend";
 import AiFinanceChat from "../components/AiFinanceChat";
+import Menu from "../components/Menu";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import "../styles/Dashboard.css";
@@ -42,6 +43,10 @@ export default function Dashboard() {
     type: "",
     date: "",
   });
+
+  //Menu
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [selectedMenu, setSelectedMenu] = useState("profile");
 
   //UX Edits
   const [isLoading, setIsLoading] = useState(false);
@@ -268,7 +273,18 @@ export default function Dashboard() {
       <header className="topbar">
         <h1 className="logo">ᨒ Flowee</h1>
         <nav className="nav-actions">
-          <button className="btn-add-config">🌣</button>
+          <button
+            onClick={() => setIsMenuOpen(!isMenuOpen)}
+            className="btn-add-config"
+          >
+            <FiSettings size={20} />
+          </button>
+          <Menu
+            isOpen={isMenuOpen}
+            setIsOpen={setIsMenuOpen}
+            selectedMenu={selectedMenu}
+            setSelectedMenu={setSelectedMenu}
+          />
           <button onClick={() => nav("/")} className="btn-logout">
             Logout
           </button>
