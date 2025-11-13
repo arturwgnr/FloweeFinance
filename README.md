@@ -108,7 +108,7 @@ Artur Wagner
 Based in Ireland
 Frontend Developer in training, focused on building real, functional projects that demonstrate technical ability, discipline, and design awareness.
 
-GitHub: https://github.com/arturwgnr
+GitHub: https://github.com/arturwgnr -
 
 ----------------------------------------------------
 📜 LICENSE
