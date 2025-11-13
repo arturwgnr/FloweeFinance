@@ -52,7 +52,7 @@ export default function Register() {
           <div className="title">
             <h2 className="register-title">Create your account</h2>
             <p className="register-subtitle">
-              Join Flowee and start organizing your finances today.
+              Start organizing your finances today.
             </p>
           </div>
 

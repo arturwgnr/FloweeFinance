@@ -26,80 +26,75 @@
   z-index: 0;
 }
 
-/* ===== BACKGROUND — degradê vivo e distinto ===== */
+/* ===== BACKGROUND — glow controlado, escuro e discreto ===== */
 .register-page::before {
   content: "";
   position: fixed;
   inset: 0;
+
   background: radial-gradient(
       circle at 20% 25%,
-      rgba(69, 207, 104, 0.22) 0%,
+      rgba(69, 207, 104, 0.12) 0%,
       transparent 60%
     ),
     radial-gradient(
       circle at 80% 80%,
-      rgba(31, 160, 115, 0.18) 0%,
+      rgba(31, 160, 115, 0.1) 0%,
       transparent 70%
-    ),
-    linear-gradient(150deg, #192318 0%, #1e291c 40%, #2f4e36 100%);
+    );
+
   background-size: 200% 200%;
-  animation: floweeGlow 16s ease-in-out infinite alternate;
-  opacity: 0.85;
-  filter: blur(25px) brightness(1.05) saturate(1.1);
-  mix-blend-mode: screen;
+  animation: organicShift 18s ease-in-out infinite alternate;
+
+  opacity: 0.45;
+  filter: blur(22px) saturate(1.05);
+  mix-blend-mode: multiply; /* impede brilho */
   z-index: -1;
 }
 
-/* ===== TEXTURE LAYER ===== */
+/* ===== TEXTURE LAYER — noise leve e animado ===== */
 .register-page::after {
   content: "";
   position: fixed;
   inset: 0;
-  background-image: url("https://www.transparenttextures.com/patterns/noise-pattern-with-subtle-cross-lines.png");
-  background-size: 200px;
-  opacity: 0.14;
+
+  background-image: url("https://www.transparenttextures.com/patterns/noise.png");
+  background-size: 180px;
+
+  opacity: 0.08;
   mix-blend-mode: overlay;
-  animation: texturePulse 9s ease-in-out infinite alternate;
+  animation: grainMove 0.8s steps(2) infinite;
   z-index: -2;
 }
 
 /* ===== ANIMAÇÕES ===== */
+
 @keyframes registerGradientShift {
   0% {
     background-position: 0% 0%;
   }
-  50% {
-    background-position: 100% 50%;
-  }
   100% {
-    background-position: 0% 100%;
+    background-position: 100% 100%;
   }
 }
 
-@keyframes floweeGlow {
+@keyframes organicShift {
   0% {
     transform: scale(1);
-    opacity: 0.7;
-    filter: blur(22px) brightness(1.05);
-  }
-  50% {
-    transform: scale(1.06);
-    opacity: 0.9;
-    filter: blur(26px) brightness(1.15);
+    opacity: 0.38;
   }
   100% {
-    transform: scale(1);
-    opacity: 0.8;
-    filter: blur(22px) brightness(1.05);
+    transform: scale(1.05);
+    opacity: 0.48;
   }
 }
 
-@keyframes texturePulse {
+@keyframes grainMove {
   0% {
-    opacity: 0.1;
+    background-position: 0 0;
   }
   100% {
-    opacity: 0.2;
+    background-position: 20px 35px;
   }
 }
 
