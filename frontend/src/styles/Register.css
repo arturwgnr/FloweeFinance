@@ -32,7 +32,8 @@
   position: fixed;
   inset: 0;
 
-  background: radial-gradient(
+  background:
+    radial-gradient(
       circle at 20% 25%,
       rgba(69, 207, 104, 0.12) 0%,
       transparent 60%
@@ -53,50 +54,8 @@
 }
 
 /* ===== TEXTURE LAYER — noise leve e animado ===== */
-.register-page::after {
-  content: "";
-  position: fixed;
-  inset: 0;
-
-  background-image: url("https://www.transparenttextures.com/patterns/noise.png");
-  background-size: 180px;
-
-  opacity: 0.08;
-  mix-blend-mode: overlay;
-  animation: grainMove 0.8s steps(2) infinite;
-  z-index: -2;
-}
 
 /* ===== ANIMAÇÕES ===== */
-
-@keyframes registerGradientShift {
-  0% {
-    background-position: 0% 0%;
-  }
-  100% {
-    background-position: 100% 100%;
-  }
-}
-
-@keyframes organicShift {
-  0% {
-    transform: scale(1);
-    opacity: 0.38;
-  }
-  100% {
-    transform: scale(1.05);
-    opacity: 0.48;
-  }
-}
-
-@keyframes grainMove {
-  0% {
-    background-position: 0 0;
-  }
-  100% {
-    background-position: 20px 35px;
-  }
-}
 
 /* ===== CONTENT ABOVE BACKGROUND ===== */
 .register-page > * {

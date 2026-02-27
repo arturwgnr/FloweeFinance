@@ -32,7 +32,8 @@
 }
 
 .menu-container.open {
-  transform: translateY(-110px) scale(1); /* <-- puxa pra cima */
+  transform: scale(1);
+  opacity: 1;
   opacity: 1;
 }
 

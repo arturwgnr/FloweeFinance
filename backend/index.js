@@ -66,9 +66,9 @@ app.post("/register", async (req, res) => {
       data: { name, email, password: hashPassword },
     });
 
-    res.status(201).json({ message: "User create successfully!", newUser });
+    res.status(201).json(newUser);
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    res.status(500).json(error.message);
   }
 });
 
@@ -85,7 +85,7 @@ app.post("/login", async (req, res) => {
 
     const matchingPassword = await bcrypt.compare(
       password,
-      existingUser.password
+      existingUser.password,
     );
 
     if (!matchingPassword) {
@@ -138,12 +138,10 @@ app.put("/transactions/:id", async (req, res) => {
       },
     });
 
-    res
-      .status(200)
-      .json({
-        message: "Transaction updated successfully",
-        updatedTransaction: updated,
-      });
+    res.status(200).json({
+      message: "Transaction updated successfully",
+      updatedTransaction: updated,
+    });
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: error.message });
